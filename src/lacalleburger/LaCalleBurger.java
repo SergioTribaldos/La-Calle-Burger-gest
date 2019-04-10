@@ -5,14 +5,24 @@
  */
 package lacalleburger;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import pedidos.Pedido;
-import productos.Bocadillo;
-import productos.Entrante;
-import productos.Hamburguesa;
-import productos.Postre;
 import productos.Producto;
-import productos.Salsa;
+import static productos.Producto.tipoProducto.BOCADILLO;
+import static productos.Producto.tipoProducto.ENTRANTE;
+import static productos.Producto.tipoProducto.HAMBURGUESA;
+import static productos.Producto.tipoProducto.POSTRE;
+import static productos.Producto.tipoProducto.SALSA;
+import static productos.Producto.unidadDeMedida.KG;
+import static productos.Producto.unidadDeMedida.UD;
 import restaurantes.Restaurante;
 import static restaurantes.Restaurante.codRestaurante.AMERICAS;
 import static restaurantes.Restaurante.codRestaurante.CENTRO;
@@ -36,44 +46,45 @@ public class LaCalleBurger {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-      /*  final Producto [] listaProductos=new Producto[37];
-        listaProductos[0]=new Hamburguesa((short)0,"HAMBURGUESA DE AGUJA 20ud",1,20);
-        listaProductos[1]=new Hamburguesa((short)1,"HAMBURGUESA DE ANGUS 20ud",1,20);
-        listaProductos[2]=new Hamburguesa((short)2,"HAMBURGUESA DE ENTRAÑA 20ud",1,20);
-        listaProductos[3]=new Hamburguesa((short)3,"HAMBURGUESA DE GARBANZOS 30ud",1,30);
-        listaProductos[4]=new Hamburguesa((short)4,"HAMBURGUESA DE LENTEJAS 30ud",1,30);
-        listaProductos[5]=new Hamburguesa((short)5,"HAMBURGUESA DE VACIO 20ud",1,20);
-        listaProductos[6]=new Hamburguesa((short)6,"HAMBURGUESA DOBLE 30ud",1,30);
-        listaProductos[7]=new Entrante((short)7,"ALITAS DE POLLO 2kg",1,2.0);
-        listaProductos[8]=new Entrante((short)8,"BACON CRUJIENTE bolsa 400gr",1,0.4);
-        listaProductos[9]=new Entrante((short)9,"CEBOLLA AL VINO bolsa 1,5kg",1,1.5);
-        listaProductos[10]=new Entrante((short)10,"CHAMPIÑON PORTOBELLO bolsa 1kg",1,1.0);
-        listaProductos[11]=new Entrante((short)11,"COSTILLAS DE CERDO bolsa 2kg",1,2.0);
-        listaProductos[12]=new Entrante((short)12,"ENTRAÑA PARA BROCHETA bolsa 500gr",1,0.5);
-        listaProductos[13]=new Entrante((short)13,"FINGERS DE POLLO bolsa 2kg",1,2.0);
-        listaProductos[14]=new Entrante((short)14,"PIMIENTO CONFITADO",1,12);
-        listaProductos[15]=new Entrante((short)15,"POLLO MARINADO bandeja 2,5kg",1,2.5);
-        listaProductos[16]=new Entrante((short)16,"SALSA CALAMBRITO bolsa 2 k",1,2.0);
-        listaProductos[17]=new Salsa((short)17,"CALDO PARA SALTEADO bolsa 1 kg",1,1.0);
-        listaProductos[18]=new Salsa((short)18,"KETCHUP LA CALLE bolsa 1 kg",1,1.0);
-        listaProductos[19]=new Salsa((short)19,"MAYONESA LA CALLE bolsa 2 kg",1,2.0);
-        listaProductos[20]=new Salsa((short)20,"MAYONESA DE CHIMICHURRI bolsa 2 kg",1,2.0);
-        listaProductos[21]=new Salsa((short)21,"MAYONESA DE PIMIENTA Y TRUFA bolsa 2 kg",1,2.0);
-        listaProductos[22]=new Salsa((short)22,"MAYONESA SWEET CHILI bolsa 1 kg",1,1.0);
-        listaProductos[23]=new Salsa((short)23,"MAYONESA VEGANA bolsa 500 g",1,0.5);
-        listaProductos[24]=new Salsa((short)24,"SALSA BBQ bolsa 2 kg",1,2.0);
-        listaProductos[25]=new Salsa((short)25,"SALSA BBQ TOFFEE bolsa 1 kg",1,1.0);
-        listaProductos[26]=new Salsa((short)26,"SALSA CALLEJERA bolsa 2 kg",1,2.0);
-        listaProductos[27]=new Salsa((short)27,"SALSA CÉSAR bolsa 1 kg",1,1.0);
-        listaProductos[28]=new Salsa((short)28,"SALSA DE ALITAS bolsa 2 kg",1,2.0);
-        listaProductos[29]=new Salsa((short)29,"VINAGRETA PARA ENSALADA DE COL bolsa 1 kg",1,1.0);
-        listaProductos[30]=new Bocadillo((short)30,"COCHINITA PIBIL bolsa 1 kg",1,1.0);
-        listaProductos[31]=new Bocadillo((short)31,"ENTRECOT MARINADO bolsa 500 g",1,0.5);
-        listaProductos[32]=new Bocadillo((short)32,"SALCHICHAS bolsa 8 ud",1,8);
-        listaProductos[33]=new Postre((short)33,"TARTA OREO caja 16 ud",1,16);
-        listaProductos[34]=new Postre((short)34,"TARTA QUESO caja 16 ud",1,16);
-        listaProductos[35]=new Postre((short)35,"TARTA SACHER caja 20 ud",1,20);
-        listaProductos[36]=new Postre((short)36,"TARTA ZANAHORIA caja 20 ud",1,20);*/
+        Scanner sc=new Scanner(System.in);
+        final Producto [] listaProductos=new Producto[37];
+        listaProductos[0]=new Producto((short)0,"HAMBURGUESA DE AGUJA 20ud",1,20,UD,HAMBURGUESA);
+        listaProductos[1]=new Producto((short)1,"HAMBURGUESA DE ANGUS 20ud",1,20,UD,HAMBURGUESA);
+        listaProductos[2]=new Producto((short)2,"HAMBURGUESA DE ENTRAÑA 20ud",1,20,UD,HAMBURGUESA);
+        listaProductos[3]=new Producto((short)3,"HAMBURGUESA DE GARBANZOS 30ud",1,30,UD,HAMBURGUESA);
+        listaProductos[4]=new Producto((short)4,"HAMBURGUESA DE LENTEJAS 30ud",1,30,UD,HAMBURGUESA);
+        listaProductos[5]=new Producto((short)5,"HAMBURGUESA DE VACIO 20ud",1,20,UD,HAMBURGUESA);
+        listaProductos[6]=new Producto((short)6,"HAMBURGUESA DOBLE 30ud",1,30,UD,HAMBURGUESA);
+        listaProductos[7]=new Producto((short)7,"ALITAS DE POLLO 2kg",1,2.0,KG,ENTRANTE);
+        listaProductos[8]=new Producto((short)8,"BACON CRUJIENTE bolsa 400gr",1,0.4,KG,ENTRANTE);
+        listaProductos[9]=new Producto((short)9,"CEBOLLA AL VINO bolsa 1,5kg",1,1.5,KG,ENTRANTE);
+        listaProductos[10]=new Producto((short)10,"CHAMPIÑON PORTOBELLO bolsa 1kg",1,1.0,KG,ENTRANTE);
+        listaProductos[11]=new Producto((short)11,"COSTILLAS DE CERDO bolsa 2kg",1,2.0,KG,ENTRANTE);
+        listaProductos[12]=new Producto((short)12,"ENTRAÑA PARA BROCHETA bolsa 500gr",1,0.5,KG,ENTRANTE);
+        listaProductos[13]=new Producto((short)13,"FINGERS DE POLLO bolsa 2kg",1,2.0,KG,ENTRANTE);
+        listaProductos[14]=new Producto((short)14,"PIMIENTO CONFITADO",1,12,UD,ENTRANTE);
+        listaProductos[15]=new Producto((short)15,"POLLO MARINADO bandeja 2,5kg",1,2.5,KG,ENTRANTE);
+        listaProductos[16]=new Producto((short)16,"SALSA CALAMBRITO bolsa 2 k",1,2.0,KG,ENTRANTE);
+        listaProductos[17]=new Producto((short)17,"CALDO PARA SALTEADO bolsa 1 kg",1,1.0,KG,SALSA);
+        listaProductos[18]=new Producto((short)18,"KETCHUP LA CALLE bolsa 1 kg",1,1.0,KG,SALSA);
+        listaProductos[19]=new Producto((short)19,"MAYONESA LA CALLE bolsa 2 kg",1,2.0,KG,SALSA);
+        listaProductos[20]=new Producto((short)20,"MAYONESA DE CHIMICHURRI bolsa 2 kg",1,2.0,KG,SALSA);
+        listaProductos[21]=new Producto((short)21,"MAYONESA DE PIMIENTA Y TRUFA bolsa 2 kg",1,2.0,KG,SALSA);
+        listaProductos[22]=new Producto((short)22,"MAYONESA SWEET CHILI bolsa 1 kg",1,1.0,KG,SALSA);
+        listaProductos[23]=new Producto((short)23,"MAYONESA VEGANA bolsa 500 g",1,0.5,KG,SALSA);
+        listaProductos[24]=new Producto((short)24,"SALSA BBQ bolsa 2 kg",1,2.0,KG,SALSA);
+        listaProductos[25]=new Producto((short)25,"SALSA BBQ TOFFEE bolsa 1 kg",1,1.0,KG,SALSA);
+        listaProductos[26]=new Producto((short)26,"SALSA CALLEJERA bolsa 2 kg",1,2.0,KG,SALSA);
+        listaProductos[27]=new Producto((short)27,"SALSA CÉSAR bolsa 1 kg",1,1.0,KG,SALSA);
+        listaProductos[28]=new Producto((short)28,"SALSA DE ALITAS bolsa 2 kg",1,2.0,KG,SALSA);
+        listaProductos[29]=new Producto((short)29,"VINAGRETA PARA ENSALADA DE COL bolsa 1 kg",1,1.0,KG,SALSA);
+        listaProductos[30]=new Producto((short)30,"COCHINITA PIBIL bolsa 1 kg",1,1.0,KG,BOCADILLO);
+        listaProductos[31]=new Producto((short)31,"ENTRECOT MARINADO bolsa 500 g",1,0.5,KG,BOCADILLO);
+        listaProductos[32]=new Producto((short)32,"SALCHICHAS bolsa 8 ud",1,8,UD,BOCADILLO);
+        listaProductos[33]=new Producto((short)33,"TARTA OREO caja 16 ud",1,16,UD,POSTRE);
+        listaProductos[34]=new Producto((short)34,"TARTA QUESO caja 16 ud",1,16,UD,POSTRE);
+        listaProductos[35]=new Producto((short)35,"TARTA SACHER caja 20 ud",1,20,UD,POSTRE);
+        listaProductos[36]=new Producto((short)36,"TARTA ZANAHORIA caja 20 ud",1,20,UD,POSTRE);
         
         ArrayList<Restaurante> listaRestaurantes=new ArrayList<Restaurante>();
         listaRestaurantes.add(new Restaurante("S7741870E","Centro","Calle Mosquera 3. Málaga","951 46 58 72",CENTRO));
@@ -89,11 +100,193 @@ public class LaCalleBurger {
         
         
         Usuario[] usuariosCentro=new Usuario[3];
-        usuariosCentro[0]=new Usuario(CENTRO,listaRestaurantes,"Javier","pk34ers");
-        usuariosCentro[1]=new Usuario(CENTRO,listaRestaurantes,"Paco","oj45er");
-        usuariosCentro[2]=new Usuario(CENTRO,listaRestaurantes,"Pepe","is55me");
+        usuariosCentro[0]=new Usuario("CENTRO","Javier","pk34ers",listaRestaurantes);
+        usuariosCentro[1]=new Usuario("CENTRO","Paco","oj45er",listaRestaurantes);
+        usuariosCentro[2]=new Usuario("CENTRO","Pepe","is55me",listaRestaurantes);
         
-        usuariosCentro[0].hacerPedido();
+        Usuario[] usuariosTeatinos=new Usuario[3];
+        usuariosTeatinos[0]=new Usuario("TEATINOS","Antonio","id14ers",listaRestaurantes);
+        usuariosTeatinos[1]=new Usuario("TEATINOS","Lisa","mg95er",listaRestaurantes);
+        usuariosTeatinos[2]=new Usuario("TEATINOS","Marge","fd45me",listaRestaurantes);
+        
+       Usuario [][]usuarios={usuariosCentro,usuariosTeatinos};
+        
+        
+        int accion=0;
+        
+        do{
+            System.out.println("Elige que quieres hacer [1] Logearse [2]Panel administrador [3]Introducir datos en base de datos [0] Salir");
+            accion=Integer.parseInt(sc.nextLine());
+            switch(accion){
+                case 1:
+                    logearse(sc,listaRestaurantes);
+                    break;
+                case 2:
+                    
+                    break;
+                case 3:
+                    meterDatos(listaProductos,listaRestaurantes,usuarios);
+                    break;
+                case 0:
+                    
+                    break;
+                
+            }
+            
+        }while(accion!=0);
+        
+       
+        
+    }
+    
+    public static void logearse(Scanner sc,ArrayList<Restaurante> listaRestaurantes){
+        System.out.println("Introduce el local desde donde haces el pedido (En mayusculas)");
+        String localIntroducido=sc.nextLine();
+        System.out.println("Introduce contraseña");
+        String contraseñaIntroducida=sc.nextLine();
+        
+        Connection conexion;
+        try {
+            conexion = DriverManager.getConnection("jdbc:mysql://127.0.0.1:3306/lacalle", "root", "kaotiko666");
+            Statement smt=conexion.createStatement();
+            ResultSet resultado=smt.executeQuery("select * from usuario;");
+            String pass="";
+            String local="";
+            String usuario="";
+            do{
+            if(resultado.next()){
+            usuario=resultado.getString("usuario");
+            pass=resultado.getString("contraseña");
+            local=resultado.getString("Restaurante_codigoRestaurante");
+            
+            
+            System.out.println(pass+""+local); 
+            if(pass.equals(contraseñaIntroducida)&&local.equals(localIntroducido)){            
+                System.out.println("Bien");
+                Usuario elegido=new Usuario(local,usuario,pass,listaRestaurantes);
+                elegido.hacerPedido();
+                break;
+            }
+            }else{
+                System.out.println("Contraseña incorrecta");
+                break;
+            }
+            
+            }while(true);//pass!=contraseñaIntroducida&&local!=localIntroducido
+            
+            
+            
+            
+        
+        } catch (SQLException ex) {
+            Logger.getLogger(LaCalleBurger.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        
+    }
+    
+    public static void meterDatos(Producto[]listaProductos,ArrayList<Restaurante> listaRestaurantes,Usuario[][] usuarios){
+        try {
+            //Conectarse a la base de datos
+            Connection conexion=DriverManager.getConnection("jdbc:mysql://127.0.0.1:3306/lacalle", "root", "kaotiko666");
+            Statement smt=conexion.createStatement();
+            //Crear la tabla restaurante
+            smt.executeUpdate("CREATE TABLE IF NOT EXISTS Restaurante (\n" +
+                            "  `cif` VARCHAR(20) NOT NULL,\n" +
+                            "  `nombre` VARCHAR(45) NOT NULL,\n" +
+                            "  `direccion` VARCHAR(150) NOT NULL,\n" +
+                            "  `telefono` VARCHAR(45) NOT NULL,\n" +
+                            "  `codigoRestaurante` VARCHAR(45) NOT NULL,\n" +
+                            "  PRIMARY KEY (`codigoRestaurante`))");
+            //Crear la tabla usuario
+            smt.executeUpdate("CREATE TABLE IF NOT EXISTS Usuario (\n" +
+                            "  `usuario` VARCHAR(15) NOT NULL,\n" +
+                            "  `contraseña` VARCHAR(15) NOT NULL,\n" +
+                            "  `Restaurante_codigoRestaurante` VARCHAR(45) NOT NULL,\n" +
+                            "  PRIMARY KEY (`usuario`),\n" +
+                            "  INDEX `fk_Usuario_Restaurante1_idx` (`Restaurante_codigoRestaurante` ASC) VISIBLE,\n" +
+                            "  CONSTRAINT `fk_Usuario_Restaurante1`\n" +
+                            "    FOREIGN KEY (`Restaurante_codigoRestaurante`)\n" +
+                            "    REFERENCES Restaurante (`codigoRestaurante`)\n" +
+                            "    ON DELETE NO ACTION\n" +
+                            "    ON UPDATE NO ACTION)");
+            //Crear la tabla pedido
+            smt.executeUpdate("CREATE TABLE IF NOT EXISTS Pedido (\n" +
+                            "  `Fecha` DATETIME NOT NULL,\n" +
+                            "  `Usuario_usuario` VARCHAR(15) NOT NULL,\n" +
+                            "  PRIMARY KEY (`Fecha`),\n" +
+                            "  INDEX `fk_Pedido_Usuario1_idx` (`Usuario_usuario` ASC) VISIBLE,\n" +
+                            "  CONSTRAINT `fk_Pedido_Usuario1`\n" +
+                            "    FOREIGN KEY (`Usuario_usuario`)\n" +
+                            "    REFERENCES Usuario (`usuario`)\n" +
+                            "    ON DELETE NO ACTION\n" +
+                            "    ON UPDATE NO ACTION)");
+            //Crear la tabla producto
+            smt.executeUpdate("CREATE TABLE IF NOT EXISTS producto (\n" +
+                            "  `id` INT NOT NULL,\n" +
+                            "  `nombre` VARCHAR(75) NOT NULL,\n" +
+                            "  `precio` DECIMAL(5,2) NULL,\n" +
+                            "  `cantidadPorUnidad` DECIMAL(5,2) NULL,\n" +
+                            "  `unidadDeMedida` VARCHAR(2) NULL,\n" +
+                            "  `tipoProducto` VARCHAR(15) NULL,\n" +
+                            "  PRIMARY KEY (`id`, `nombre`))");
+            //Crear la tabla intermedia entre producto y pedido
+            smt.executeUpdate("CREATE TABLE IF NOT EXISTS producto_has_Pedido (\n" +
+                        "  `producto_id` INT NOT NULL,\n" +
+                        "  `producto_nombre` VARCHAR(75) NOT NULL,\n" +
+                        "  `Pedido_Fecha` DATETIME NOT NULL,\n" +
+                        "  `cantidad` INT NOT NULL,\n" +
+                        "  `lote` VARCHAR(45) NULL,\n" +
+                        "  PRIMARY KEY (`producto_id`, `producto_nombre`, `Pedido_Fecha`),\n" +
+                        "  INDEX `fk_producto_has_Pedido_Pedido1_idx` (`Pedido_Fecha` ASC) VISIBLE,\n" +
+                        "  INDEX `fk_producto_has_Pedido_producto1_idx` (`producto_id` ASC, `producto_nombre` ASC) VISIBLE,\n" +
+                        "  CONSTRAINT `fk_producto_has_Pedido_producto1`\n" +
+                        "    FOREIGN KEY (`producto_id` , `producto_nombre`)\n" +
+                        "    REFERENCES producto (`id` , `nombre`)\n" +
+                        "    ON DELETE NO ACTION\n" +
+                        "    ON UPDATE NO ACTION,\n" +
+                        "  CONSTRAINT `fk_producto_has_Pedido_Pedido1`\n" +
+                        "    FOREIGN KEY (`Pedido_Fecha`)\n" +
+                        "    REFERENCES Pedido (`Fecha`)\n" +
+                        "    ON DELETE NO ACTION\n" +
+                        "    ON UPDATE NO ACTION)");
+            //Introducir los datos de producto
+            for(int i=0;i<listaProductos.length;i++){
+               smt.executeUpdate("insert into producto values("
+                        + "'"+listaProductos[i].getId()+"',"
+                        + "'"+listaProductos[i].getNombre()+"',"
+                        + "'"+listaProductos[i].getPrecio()+"',"         
+                        + "'"+listaProductos[i].getCantidadPorUnidad()+"',"
+                        + "'"+listaProductos[i].getUnidadDeMedida()+"',"
+                        + "'"+listaProductos[i].getTipoProducto()+"');");
+                }
+            //Introducir los datos de los restaurantes
+            for(int i=0;i<listaRestaurantes.size();i++){
+                smt.executeUpdate("insert into restaurante values("
+                        + "'"+listaRestaurantes.get(i).getCif()+"',"
+                        + "'"+listaRestaurantes.get(i).getNombre()+"',"
+                        + "'"+listaRestaurantes.get(i).getDireccion()+"',"         
+                        + "'"+listaRestaurantes.get(i).getTelefono()+"',"
+                        + "'"+listaRestaurantes.get(i).getCodigoRestaurante()+"')");
+            }
+            //Introducir los datos de usuario
+            for(int i=0;i<usuarios.length;i++){
+                for(int j=0;j<usuarios[i].length;j++){
+                    smt.executeUpdate("insert into usuario values("
+                        + "'"+usuarios[i][j].getUsuario()+"',"
+                        + "'"+usuarios[i][j].getContraseña()+"',"
+                        + "'"+usuarios[i][j].getRestaurante().getCodigoRestaurante()+"')");
+                    
+                }
+            }
+            
+            
+
+        } catch (SQLException ex) {
+            Logger.getLogger(LaCalleBurger.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        
         
     }
     

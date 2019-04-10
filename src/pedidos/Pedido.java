@@ -8,18 +8,19 @@ package pedidos;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import static java.time.format.DateTimeFormatter.RFC_1123_DATE_TIME;
+import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import productos.Bocadillo;
-import productos.Entrante;
-import productos.Hamburguesa;
-import productos.Postre;
 import productos.Producto;
-import productos.Salsa;
 import restaurantes.Restaurante;
 import usuarios.Usuario;
 
@@ -36,62 +37,64 @@ public class Pedido {
 
     public Pedido(Usuario usuario) {
         
-        this.listaProductos = listaProductos();
-        this.cantidad = new int[listaProductos.length];
-        this.lote = new String[listaProductos.length];
+        //this.listaProductos = listaProductos();
+        //this.cantidad = new int[listaProductos.length];
+        //this.lote = new String[listaProductos.length];
         this.fechaPedido = LocalDateTime.now();
         this.usuario = usuario;
 
     }
     
     public Producto[] listaProductos(){
-        final Producto [] listaProductos=new Producto[37];
-        listaProductos[0]=new Hamburguesa((short)0,"HAMBURGUESA DE AGUJA 20ud",1,20);
-        listaProductos[1]=new Hamburguesa((short)1,"HAMBURGUESA DE ANGUS 20ud",1,20);
-        listaProductos[2]=new Hamburguesa((short)2,"HAMBURGUESA DE ENTRAÑA 20ud",1,20);
-        listaProductos[3]=new Hamburguesa((short)3,"HAMBURGUESA DE GARBANZOS 30ud",1,30);
-        listaProductos[4]=new Hamburguesa((short)4,"HAMBURGUESA DE LENTEJAS 30ud",1,30);
-        listaProductos[5]=new Hamburguesa((short)5,"HAMBURGUESA DE VACIO 20ud",1,20);
-        listaProductos[6]=new Hamburguesa((short)6,"HAMBURGUESA DOBLE 30ud",1,30);
-        listaProductos[7]=new Entrante((short)7,"ALITAS DE POLLO 2kg",1,2.0);
-        listaProductos[8]=new Entrante((short)8,"BACON CRUJIENTE bolsa 400gr",1,0.4);
-        listaProductos[9]=new Entrante((short)9,"CEBOLLA AL VINO bolsa 1,5kg",1,1.5);
-        listaProductos[10]=new Entrante((short)10,"CHAMPIÑON PORTOBELLO bolsa 1kg",1,1.0);
-        listaProductos[11]=new Entrante((short)11,"COSTILLAS DE CERDO bolsa 2kg",1,2.0);
-        listaProductos[12]=new Entrante((short)12,"ENTRAÑA PARA BROCHETA bolsa 500gr",1,0.5);
-        listaProductos[13]=new Entrante((short)13,"FINGERS DE POLLO bolsa 2kg",1,2.0);
-        listaProductos[14]=new Entrante((short)14,"PIMIENTO CONFITADO",1,12);
-        listaProductos[15]=new Entrante((short)15,"POLLO MARINADO bandeja 2,5kg",1,2.5);
-        listaProductos[16]=new Entrante((short)16,"SALSA CALAMBRITO bolsa 2 k",1,2.0);
-        listaProductos[17]=new Salsa((short)17,"CALDO PARA SALTEADO bolsa 1 kg",1,1.0);
-        listaProductos[18]=new Salsa((short)18,"KETCHUP LA CALLE bolsa 1 kg",1,1.0);
-        listaProductos[19]=new Salsa((short)19,"MAYONESA LA CALLE bolsa 2 kg",1,2.0);
-        listaProductos[20]=new Salsa((short)20,"MAYONESA DE CHIMICHURRI bolsa 2 kg",1,2.0);
-        listaProductos[21]=new Salsa((short)21,"MAYONESA DE PIMIENTA Y TRUFA bolsa 2 kg",1,2.0);
-        listaProductos[22]=new Salsa((short)22,"MAYONESA SWEET CHILI bolsa 1 kg",1,1.0);
-        listaProductos[23]=new Salsa((short)23,"MAYONESA VEGANA bolsa 500 g",1,0.5);
-        listaProductos[24]=new Salsa((short)24,"SALSA BBQ bolsa 2 kg",1,2.0);
-        listaProductos[25]=new Salsa((short)25,"SALSA BBQ TOFFEE bolsa 1 kg",1,1.0);
-        listaProductos[26]=new Salsa((short)26,"SALSA CALLEJERA bolsa 2 kg",1,2.0);
-        listaProductos[27]=new Salsa((short)27,"SALSA CÉSAR bolsa 1 kg",1,1.0);
-        listaProductos[28]=new Salsa((short)28,"SALSA DE ALITAS bolsa 2 kg",1,2.0);
-        listaProductos[29]=new Salsa((short)29,"VINAGRETA PARA ENSALADA DE COL bolsa 1 kg",1,1.0);
-        listaProductos[30]=new Bocadillo((short)30,"COCHINITA PIBIL bolsa 1 kg",1,1.0);
-        listaProductos[31]=new Bocadillo((short)31,"ENTRECOT MARINADO bolsa 500 g",1,0.5);
-        listaProductos[32]=new Bocadillo((short)32,"SALCHICHAS bolsa 8 ud",1,8);
-        listaProductos[33]=new Postre((short)33,"TARTA OREO caja 16 ud",1,16);
-        listaProductos[34]=new Postre((short)34,"TARTA QUESO caja 16 ud",1,16);
-        listaProductos[35]=new Postre((short)35,"TARTA SACHER caja 20 ud",1,20);
-        listaProductos[36]=new Postre((short)36,"TARTA ZANAHORIA caja 20 ud",1,20);
-        
         return listaProductos;
     }
     
-    public void meteDatos(){
+    public void nuevoPedido(){
         Scanner sc=new Scanner(System.in);
-        String lote="";
-        int cantidad;
+        Connection conexion;
+        try {
+            conexion = DriverManager.getConnection("jdbc:mysql://127.0.0.1:3306/lacalle", "root","kaotiko666");
+            Statement smt=conexion.createStatement();
+            ResultSet resultado=smt.executeQuery("select * from producto;");
+            ArrayList<Integer>cantidad=new ArrayList<Integer>();
+            
+            //Introducimos los datos del pedido y los guardamos en un ArrayList de Integer
+            while(resultado.next()){  
+                System.out.println("Introduce cantidad para "+resultado.getString("nombre"));
+                cantidad.add(Integer.parseInt(sc.nextLine()));     
+                };
+            //Recogemos la hora exacta del pedido, que sera la clave primaria
+                LocalDateTime horaPedido=LocalDateTime.now();
+             
+            //Creamos el pedido
+                smt.executeUpdate("insert into pedido values("
+                        + "'"+horaPedido+"','"+this.usuario.getUsuario()+"')");
+            
+            //Creamos un statement nuevo
+            Statement smt2=conexion.createStatement();
+            ResultSet resultado2=smt2.executeQuery("select * from producto;");
+            String producto_id="";
+            String producto_nombre="";
+            int iterador=0;
+            
+            //Introducimos los datos en la tabla intermedia de producto y pedido, es decir , el pedido en si
+            while(resultado2.next()){
+                producto_id=resultado2.getString("id");
+                producto_nombre=resultado2.getString("nombre");
+                String r="insert into producto_has_pedido("
+                        + "'"+producto_id+"','"+producto_nombre+"','"+horaPedido+"','"+cantidad.get(iterador)+"','null');";
+                System.out.println(r);
+                smt.executeUpdate("insert into producto_has_pedido values("
+                        + "'"+producto_id+"','"+producto_nombre+"','"+horaPedido+"','"+cantidad.get(iterador)+"','null');");
+                iterador++;
+            }
+                
+        } catch (SQLException ex) {
+            Logger.getLogger(Pedido.class.getName()).log(Level.SEVERE, null, ex);
+        }
         
+        
+        /*
         for(int i=0;i<6;i++){
             System.out.println("Introduce cantidad para "+this.listaProductos[i].getNombre());
             cantidad=Integer.parseInt(sc.nextLine());
@@ -100,6 +103,7 @@ public class Pedido {
         }
         
         escribeArchivo();
+                */
     }
     
     public void escribeArchivo(){
