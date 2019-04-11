@@ -10,17 +10,17 @@ package productos;
  * @author Sergio
  */
 public class Producto {
+    private final short id;
     private final String nombre;
     private final float precio;
-    private final short id;
     private tipoProducto tipoProducto;
     private double cantidadPorUnidad;
     private unidadDeMedida unidadDeMedida;
 
     public Producto(short id,String nombre, float precio, double cantidadPorUnidad, unidadDeMedida unidadDeMedida, tipoProducto tipoProducto) {
+        this.id = id;
         this.nombre = nombre;
         this.precio = precio;
-        this.id = id;
         this.tipoProducto = tipoProducto;
         this.cantidadPorUnidad = cantidadPorUnidad;
         this.unidadDeMedida = unidadDeMedida;
@@ -50,9 +50,6 @@ public class Producto {
         return precio;
     }
 
-    public short getId() {
-        return id;
-    }
 
     public tipoProducto getTipoProducto() {
         return tipoProducto;
@@ -64,6 +61,10 @@ public class Producto {
 
     public unidadDeMedida getUnidadDeMedida() {
         return unidadDeMedida;
+    }
+
+    public short getId() {
+        return id;
     }
 
     

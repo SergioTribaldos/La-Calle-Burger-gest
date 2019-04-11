@@ -46,6 +46,7 @@ public class LaCalleBurger {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
+        
         Scanner sc=new Scanner(System.in);
         final Producto [] listaProductos=new Producto[37];
         listaProductos[0]=new Producto((short)0,"HAMBURGUESA DE AGUJA 20ud",1,20,UD,HAMBURGUESA);
@@ -87,27 +88,27 @@ public class LaCalleBurger {
         listaProductos[36]=new Producto((short)36,"TARTA ZANAHORIA caja 20 ud",1,20,UD,POSTRE);
         
         ArrayList<Restaurante> listaRestaurantes=new ArrayList<Restaurante>();
-        listaRestaurantes.add(new Restaurante("S7741870E","Centro","Calle Mosquera 3. Málaga","951 46 58 72",CENTRO));
-        listaRestaurantes.add(new Restaurante("S3341870E","Teatinos","Av. de Gregorio Prieto 27. Málaga ","951 02 30 50",TEATINOS));
-        listaRestaurantes.add(new Restaurante("S5541870E","Fuengirola","Calle Marconi 32, Fuengirola Málaga","951 10 11 35",FUENGIROLA));
-        listaRestaurantes.add(new Restaurante("S4441870E","Pedregalejo","Paseo Marítimo El Pedregal 11. Málaga Pedregalejo","951 50 35 64",PEDREGALEJO));
-        listaRestaurantes.add(new Restaurante("S8841870E","Americas","Avenida de las Américas 9. Málaga","951 07 97 94",AMERICAS));
-        listaRestaurantes.add(new Restaurante("S1141870E","Plaza Mayor","Calle Alfonso Ponce de León 3. Málaga","952 02 64 64",PLAZA_MAYOR));
-        listaRestaurantes.add(new Restaurante("S0041870E","Parque Oeste","Calle Diamantino García Acosta 1. Málaga","951 91 77 15",PARQUE_OESTE));
-        listaRestaurantes.add(new Restaurante("S0041870E","Gamarra","Calle Sondalezas 33. Málaga","951 77 70 93",GAMARRA));
-        listaRestaurantes.add(new Restaurante("S0041870E","San Pedro","Avenida de Burgos 22. San Pedro de Alcántara","951 482 590",SAN_PEDRO));
-        listaRestaurantes.add(new Restaurante("S0041870E","Marbella","Avenida Miguel Cano 1. Edif. Milenium. Marbella","951 812 128",MARBELLA));
+        listaRestaurantes.add(new Restaurante("S7741870E","Centro","Calle Mosquera 3. Málaga","951 46 58 72","CENTRO",null));
+        listaRestaurantes.add(new Restaurante("S3341870E","Teatinos","Av. de Gregorio Prieto 27. Málaga ","951 02 30 50","TEATINOS",null));
+        listaRestaurantes.add(new Restaurante("S5541870E","Fuengirola","Calle Marconi 32, Fuengirola Málaga","951 10 11 35","FUENGIROLA",null));
+        listaRestaurantes.add(new Restaurante("S4441870E","Pedregalejo","Paseo Marítimo El Pedregal 11. Málaga Pedregalejo","951 50 35 64","PEDREGALEJO",null));
+        listaRestaurantes.add(new Restaurante("S8841870E","Americas","Avenida de las Américas 9. Málaga","951 07 97 94","AMERICAS",null));
+        listaRestaurantes.add(new Restaurante("S1141870E","Plaza Mayor","Calle Alfonso Ponce de León 3. Málaga","952 02 64 64","PLAZA_MAYOR",null));
+        listaRestaurantes.add(new Restaurante("S0041870E","Parque Oeste","Calle Diamantino García Acosta 1. Málaga","951 91 77 15","PARQUE_OESTE",null));
+        listaRestaurantes.add(new Restaurante("S0041870E","Gamarra","Calle Sondalezas 33. Málaga","951 77 70 93","GAMARRA",null));
+        listaRestaurantes.add(new Restaurante("S0041870E","San Pedro","Avenida de Burgos 22. San Pedro de Alcántara","951 482 590","SAN_PEDRO",null));
+        listaRestaurantes.add(new Restaurante("S0041870E","Marbella","Avenida Miguel Cano 1. Edif. Milenium. Marbella","951 812 128","MARBELLA",null));
         
         
         Usuario[] usuariosCentro=new Usuario[3];
-        usuariosCentro[0]=new Usuario("CENTRO","Javier","pk34ers",listaRestaurantes);
-        usuariosCentro[1]=new Usuario("CENTRO","Paco","oj45er",listaRestaurantes);
-        usuariosCentro[2]=new Usuario("CENTRO","Pepe","is55me",listaRestaurantes);
+        usuariosCentro[0]=new Usuario("CENTRO","Javier","pk34ers");
+        usuariosCentro[1]=new Usuario("CENTRO","Paco","oj45er");
+        usuariosCentro[2]=new Usuario("CENTRO","Pepe","is55me");
         
         Usuario[] usuariosTeatinos=new Usuario[3];
-        usuariosTeatinos[0]=new Usuario("TEATINOS","Antonio","id14ers",listaRestaurantes);
-        usuariosTeatinos[1]=new Usuario("TEATINOS","Lisa","mg95er",listaRestaurantes);
-        usuariosTeatinos[2]=new Usuario("TEATINOS","Marge","fd45me",listaRestaurantes);
+        usuariosTeatinos[0]=new Usuario("TEATINOS","Antonio","id14ers");
+        usuariosTeatinos[1]=new Usuario("TEATINOS","Lisa","mg95er");
+        usuariosTeatinos[2]=new Usuario("TEATINOS","Marge","fd45me");
         
        Usuario [][]usuarios={usuariosCentro,usuariosTeatinos};
         
@@ -163,8 +164,17 @@ public class LaCalleBurger {
             System.out.println(pass+""+local); 
             if(pass.equals(contraseñaIntroducida)&&local.equals(localIntroducido)){            
                 System.out.println("Bien");
-                Usuario elegido=new Usuario(local,usuario,pass,listaRestaurantes);
-                elegido.hacerPedido();
+                Usuario usuarioElegido=new Usuario(local,usuario,pass);
+                
+                Statement smt2=conexion.createStatement();
+                ResultSet resultado2=smt2.executeQuery("select * from Restaurante where codigoRestaurante='"+local+"';");
+                resultado2.next();
+                String cif=resultado2.getString("cif");
+                String nombre=resultado2.getString("nombre");
+                String direccion=resultado2.getString("direccion");
+                String telefono=resultado2.getString("telefono");
+                Restaurante restauranteElegido=new Restaurante(cif,nombre,direccion,telefono,local,usuarioElegido);
+                restauranteElegido.hacerPedido();
                 break;
             }
             }else{
@@ -253,7 +263,7 @@ public class LaCalleBurger {
             //Introducir los datos de producto
             for(int i=0;i<listaProductos.length;i++){
                smt.executeUpdate("insert into producto values("
-                        + "'"+listaProductos[i].getId()+"',"
+                       + "'"+listaProductos[i].getId()+"',"
                         + "'"+listaProductos[i].getNombre()+"',"
                         + "'"+listaProductos[i].getPrecio()+"',"         
                         + "'"+listaProductos[i].getCantidadPorUnidad()+"',"
@@ -275,7 +285,7 @@ public class LaCalleBurger {
                     smt.executeUpdate("insert into usuario values("
                         + "'"+usuarios[i][j].getUsuario()+"',"
                         + "'"+usuarios[i][j].getContraseña()+"',"
-                        + "'"+usuarios[i][j].getRestaurante().getCodigoRestaurante()+"')");
+                        + "'"+usuarios[i][j].getRestaurante()+"')");
                     
                 }
             }

@@ -29,19 +29,16 @@ import usuarios.Usuario;
  * @author Sergio
  */
 public class Pedido {
-    private Usuario usuario;
+    private Restaurante restaurante;
     private Producto[] listaProductos;
     private int [] cantidad;
     private String [] lote;
     private LocalDateTime fechaPedido;
 
-    public Pedido(Usuario usuario) {
-        
-        //this.listaProductos = listaProductos();
-        //this.cantidad = new int[listaProductos.length];
-        //this.lote = new String[listaProductos.length];
+    public Pedido(Restaurante restaurante) {
+ 
         this.fechaPedido = LocalDateTime.now();
-        this.usuario = usuario;
+        this.restaurante = restaurante;
 
     }
     
@@ -65,10 +62,11 @@ public class Pedido {
                 };
             //Recogemos la hora exacta del pedido, que sera la clave primaria
                 LocalDateTime horaPedido=LocalDateTime.now();
+          ///////////////////MIRAR ESTO//      String horaPedido=horaPedidoCrear.format(DateTimeFormatter.ofPattern("d/M/u k:m"));
              
             //Creamos el pedido
                 smt.executeUpdate("insert into pedido values("
-                        + "'"+horaPedido+"','"+this.usuario.getUsuario()+"')");
+                        + "'"+horaPedido+"','"+this.restaurante.getCodigoRestaurante()+"')");
             
             //Creamos un statement nuevo
             Statement smt2=conexion.createStatement();
@@ -81,11 +79,11 @@ public class Pedido {
             while(resultado2.next()){
                 producto_id=resultado2.getString("id");
                 producto_nombre=resultado2.getString("nombre");
-                String r="insert into producto_has_pedido("
+               /* String r="insert into producto_has_pedido("
                         + "'"+producto_id+"','"+producto_nombre+"','"+horaPedido+"','"+cantidad.get(iterador)+"','null');";
-                System.out.println(r);
+                System.out.println(r);*/
                 smt.executeUpdate("insert into producto_has_pedido values("
-                        + "'"+producto_id+"','"+producto_nombre+"','"+horaPedido+"','"+cantidad.get(iterador)+"','null');");
+                        + "'"+producto_id+"','"+producto_nombre+"','"+horaPedido+"','"+cantidad.get(iterador)+"');");
                 iterador++;
             }
                 

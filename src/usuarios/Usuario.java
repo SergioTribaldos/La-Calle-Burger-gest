@@ -8,6 +8,17 @@ package usuarios;
 import java.util.ArrayList;
 import pedidos.Pedido;
 import restaurantes.Restaurante;
+import restaurantes.Restaurante.codRestaurante;
+import static restaurantes.Restaurante.codRestaurante.AMERICAS;
+import static restaurantes.Restaurante.codRestaurante.CENTRO;
+import static restaurantes.Restaurante.codRestaurante.FUENGIROLA;
+import static restaurantes.Restaurante.codRestaurante.GAMARRA;
+import static restaurantes.Restaurante.codRestaurante.MARBELLA;
+import static restaurantes.Restaurante.codRestaurante.PARQUE_OESTE;
+import static restaurantes.Restaurante.codRestaurante.PEDREGALEJO;
+import static restaurantes.Restaurante.codRestaurante.PLAZA_MAYOR;
+import static restaurantes.Restaurante.codRestaurante.SAN_PEDRO;
+import static restaurantes.Restaurante.codRestaurante.TEATINOS;
 
 /**
  *
@@ -16,42 +27,42 @@ import restaurantes.Restaurante;
 public class Usuario {
     private String usuario;
     private String contraseña;
-    private Restaurante restaurante;
+    private codRestaurante codigoRestaurante;
     private Pedido pedido;
 
-    public Usuario(String restaurante,String usuario,String contrasena,ArrayList<Restaurante> listaRestaurante) {
+    public Usuario(String restaurante,String usuario,String contrasena) {
         this.usuario = usuario;
         this.contraseña = contrasena;
         switch(restaurante){
             case "CENTRO":
-                this.restaurante = listaRestaurante.get(0);
+                this.codigoRestaurante = CENTRO;
                 break;
             case "TEATINOS":
-                this.restaurante = listaRestaurante.get(1);
+                this.codigoRestaurante = TEATINOS;
                 break;
             case "FUENGIROLA":
-                this.restaurante = listaRestaurante.get(2);
+                this.codigoRestaurante = FUENGIROLA;
                 break;
             case "PEDREGALEJO":
-                this.restaurante = listaRestaurante.get(3);
+                this.codigoRestaurante = PEDREGALEJO;
                 break;
             case "AMERICAS":
-                this.restaurante = listaRestaurante.get(4);
+                this.codigoRestaurante = AMERICAS;
                 break;
             case "PLAZA_MAYOR":
-                this.restaurante = listaRestaurante.get(5);
+                this.codigoRestaurante = PLAZA_MAYOR;
                 break;
             case "PARQUE_OESTE":
-                this.restaurante = listaRestaurante.get(6);
+                this.codigoRestaurante = PARQUE_OESTE;
                 break; 
             case "GAMARRA":
-                this.restaurante = listaRestaurante.get(7);
+                this.codigoRestaurante = GAMARRA;
                 break;
             case "SAN_PEDRO":
-                this.restaurante = listaRestaurante.get(8);
+                this.codigoRestaurante = SAN_PEDRO;
                 break;
             case "MARBELLA":
-                this.restaurante = listaRestaurante.get(9);
+                this.codigoRestaurante = MARBELLA;
                 break;        
         }
     }
@@ -64,8 +75,8 @@ public class Usuario {
         return contraseña;
     }
 
-    public Restaurante getRestaurante() {
-        return restaurante;
+    public codRestaurante getRestaurante() {
+        return codigoRestaurante;
     }
 
     public Pedido getPedido() {
@@ -74,11 +85,7 @@ public class Usuario {
     
     
     
-    public void hacerPedido(){
-        System.out.println("Usuario "+this.usuario+", vas a hacer un nuevo pedido");
-        this.pedido = new Pedido(this);
-        this.pedido.nuevoPedido();
-    }
+  
     
     public void logearse(){
         
