@@ -29,15 +29,15 @@ public class Restaurante {
     private final String direccion;
     private final String telefono;
     private codRestaurante codigoRestaurante;
-    private Usuario usuario;
+
     
 
-    public Restaurante(String cif, String nombre, String direccion, String telefono,String codigo,Usuario usuario) {
+    public Restaurante(String cif, String nombre, String direccion, String telefono,String codigo) {
         this.cif = cif;
         this.nombre = nombre;
         this.direccion = direccion;
         this.telefono = telefono;
-        this.usuario = usuario;
+
         setCodigoRestaurante(codigo);
     }
     
@@ -70,9 +70,6 @@ public class Restaurante {
         return telefono;
     }
 
-    public Usuario getUsuario() {
-        return usuario;
-    }
     
     public codRestaurante getCodigoRestaurante() {
         return codigoRestaurante;
@@ -113,11 +110,7 @@ public class Restaurante {
         }
     }
     
-    public void hacerPedido(){
-        System.out.println("Panel de control de pedidos, usuario "+this.usuario.getUsuario()+" Restaurante: "+this.nombre);
-        Pedido actual=new Pedido(this);
-        actual.nuevoPedido();
-    }
+    
     
     
     

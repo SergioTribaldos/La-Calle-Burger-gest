@@ -29,16 +29,16 @@ import usuarios.Usuario;
  * @author Sergio
  */
 public class Pedido {
-    private Restaurante restaurante;
+    private Usuario usuario;
     private Producto[] listaProductos;
     private int [] cantidad;
     private String [] lote;
     private LocalDateTime fechaPedido;
 
-    public Pedido(Restaurante restaurante) {
+    public Pedido(Usuario usuario) {
  
         this.fechaPedido = LocalDateTime.now();
-        this.restaurante = restaurante;
+        this.usuario = usuario;
 
     }
     
@@ -65,25 +65,30 @@ public class Pedido {
           ///////////////////MIRAR ESTO//      String horaPedido=horaPedidoCrear.format(DateTimeFormatter.ofPattern("d/M/u k:m"));
              
             //Creamos el pedido
-                smt.executeUpdate("insert into pedido values("
-                        + "'"+horaPedido+"','"+this.restaurante.getCodigoRestaurante()+"')");
+                smt.executeUpdate("insert into pedido(fecha,usuario_Usuario,Usuario_Restaurante_codigoRestaurante) values("
+                        + "'"+horaPedido+"','"+this.usuario.getUsuario()+"','"+this.usuario.getRestaurante().getCodigoRestaurante()+"');");
             
             //Creamos un statement nuevo
             Statement smt2=conexion.createStatement();
-            ResultSet resultado2=smt2.executeQuery("select * from producto;");
-            String producto_id="";
-            String producto_nombre="";
+            ResultSet resultado2=smt2.executeQuery("select max(idPedido) from pedido;");
+            resultado2.next();
+            String id_pedido=resultado2.getString(1);
+            
+            Statement smt3=conexion.createStatement();
+            ResultSet resultado3=smt3.executeQuery("select * from producto;");
             int iterador=0;
             
+            String id_producto="";
             //Introducimos los datos en la tabla intermedia de producto y pedido, es decir , el pedido en si
-            while(resultado2.next()){
-                producto_id=resultado2.getString("id");
-                producto_nombre=resultado2.getString("nombre");
+            while(resultado3.next()){
+                id_producto=resultado3.getString("id");
+                
+                
                /* String r="insert into producto_has_pedido("
                         + "'"+producto_id+"','"+producto_nombre+"','"+horaPedido+"','"+cantidad.get(iterador)+"','null');";
                 System.out.println(r);*/
-                smt.executeUpdate("insert into producto_has_pedido values("
-                        + "'"+producto_id+"','"+producto_nombre+"','"+horaPedido+"','"+cantidad.get(iterador)+"');");
+                smt.executeUpdate("insert into productospedidos values("
+                        + "'"+id_producto+"','"+id_pedido+"','"+cantidad.get(iterador)+"');");
                 iterador++;
             }
                 

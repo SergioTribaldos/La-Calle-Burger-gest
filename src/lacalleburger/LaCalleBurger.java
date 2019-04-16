@@ -48,7 +48,7 @@ public class LaCalleBurger {
     public static void main(String[] args) {
         
         Scanner sc=new Scanner(System.in);
-        final Producto [] listaProductos=new Producto[37];
+       /* final Producto [] listaProductos=new Producto[37];
         listaProductos[0]=new Producto((short)0,"HAMBURGUESA DE AGUJA 20ud",1,20,UD,HAMBURGUESA);
         listaProductos[1]=new Producto((short)1,"HAMBURGUESA DE ANGUS 20ud",1,20,UD,HAMBURGUESA);
         listaProductos[2]=new Producto((short)2,"HAMBURGUESA DE ENTRAÑA 20ud",1,20,UD,HAMBURGUESA);
@@ -108,9 +108,9 @@ public class LaCalleBurger {
         Usuario[] usuariosTeatinos=new Usuario[3];
         usuariosTeatinos[0]=new Usuario("TEATINOS","Antonio","id14ers");
         usuariosTeatinos[1]=new Usuario("TEATINOS","Lisa","mg95er");
-        usuariosTeatinos[2]=new Usuario("TEATINOS","Marge","fd45me");
+        usuariosTeatinos[2]=new Usuario("TEATINOS","Marge","fd45me");*/
         
-       Usuario [][]usuarios={usuariosCentro,usuariosTeatinos};
+ 
         
         
         int accion=0;
@@ -120,7 +120,7 @@ public class LaCalleBurger {
             accion=Integer.parseInt(sc.nextLine());
             switch(accion){
                 case 1:
-                    logearse(sc,listaRestaurantes);
+                    logearse(sc);
                     break;
                 case 2:
                     
@@ -140,9 +140,9 @@ public class LaCalleBurger {
         
     }
     
-    public static void logearse(Scanner sc,ArrayList<Restaurante> listaRestaurantes){
-        System.out.println("Introduce el local desde donde haces el pedido (En mayusculas)");
-        String localIntroducido=sc.nextLine();
+    public static void logearse(Scanner sc){
+        System.out.println("Introduce el usuario");
+        String usuarioIntroducido=sc.nextLine();
         System.out.println("Introduce contraseña");
         String contraseñaIntroducida=sc.nextLine();
         
@@ -150,44 +150,41 @@ public class LaCalleBurger {
         try {
             conexion = DriverManager.getConnection("jdbc:mysql://127.0.0.1:3306/lacalle", "root", "kaotiko666");
             Statement smt=conexion.createStatement();
-            ResultSet resultado=smt.executeQuery("select * from usuario;");
-            String pass="";
-            String local="";
+            ResultSet resultado=smt.executeQuery("select * from usuario where usuario='"+usuarioIntroducido+"' and contraseña='"+contraseñaIntroducida+"';");
             String usuario="";
-            do{
+            String pass="";
+            String restaurante="";
+            System.out.println(resultado);
+            
             if(resultado.next()){
             usuario=resultado.getString("usuario");
             pass=resultado.getString("contraseña");
-            local=resultado.getString("Restaurante_codigoRestaurante");
+            restaurante=resultado.getString("Restaurante_codigoRestaurante");
             
             
-            System.out.println(pass+""+local); 
-            if(pass.equals(contraseñaIntroducida)&&local.equals(localIntroducido)){            
+            System.out.println(pass+""+restaurante); 
+            if(usuario.equals(usuarioIntroducido)&&pass.equals(contraseñaIntroducida)){            
                 System.out.println("Bien");
-                Usuario usuarioElegido=new Usuario(local,usuario,pass);
+                
                 
                 Statement smt2=conexion.createStatement();
-                ResultSet resultado2=smt2.executeQuery("select * from Restaurante where codigoRestaurante='"+local+"';");
+                ResultSet resultado2=smt2.executeQuery("select * from Restaurante where codigoRestaurante='"+restaurante+"';");
                 resultado2.next();
                 String cif=resultado2.getString("cif");
                 String nombre=resultado2.getString("nombre");
                 String direccion=resultado2.getString("direccion");
                 String telefono=resultado2.getString("telefono");
-                Restaurante restauranteElegido=new Restaurante(cif,nombre,direccion,telefono,local,usuarioElegido);
-                restauranteElegido.hacerPedido();
-                break;
+                Restaurante restauranteElegido=new Restaurante(cif,nombre,direccion,telefono,restaurante);
+                Usuario usuarioElegido=new Usuario(restauranteElegido,usuario,pass);
+                usuarioElegido.hacerPedido();
+              
             }
             }else{
                 System.out.println("Contraseña incorrecta");
-                break;
+                logearse(sc);
+                
             }
-            
-            }while(true);//pass!=contraseñaIntroducida&&local!=localIntroducido
-            
-            
-            
-            
-        
+ 
         } catch (SQLException ex) {
             Logger.getLogger(LaCalleBurger.class.getName()).log(Level.SEVERE, null, ex);
         }
