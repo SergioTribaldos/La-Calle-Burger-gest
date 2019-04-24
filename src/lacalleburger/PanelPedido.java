@@ -887,7 +887,7 @@ public class PanelPedido extends JPanel{
 		});
 		
 		
-		try {
+		/*try {
 			
             
             
@@ -924,6 +924,7 @@ public class PanelPedido extends JPanel{
 } catch (SQLException ex) {
     Logger.getLogger(Administrador.class.getName()).log(Level.SEVERE, null, ex);
 }
+*/
 		
 	}
 

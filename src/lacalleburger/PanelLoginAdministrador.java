@@ -31,13 +31,13 @@ import java.awt.Insets;
 import java.awt.Dimension;
 import javax.swing.SwingConstants;
 
-public class PanelLogin extends JPanel {
+public class PanelLoginAdministrador extends JPanel {
 	JButton siguiente;
 	private JTextField usuarioEntradaTexto;
 	private JPasswordField contrasenaEntradaTexto;
 	
-	public PanelLogin(JFrame ventana) {
-		PanelLogin estePanel=this;
+	public PanelLoginAdministrador(JFrame ventana) {
+		PanelLoginAdministrador estePanel=this;
 		setBackground(Color.BLACK);
 		this.setSize(new Dimension(807, 566));
 		setLayout(null);
@@ -83,12 +83,12 @@ public class PanelLogin extends JPanel {
 		lblNewLabel.setBounds(23, 6, 226, 192);
 		add(lblNewLabel);
 		
-		JLabel lblPanelDeUsuario = new JLabel("Panel de usuario");
-		lblPanelDeUsuario.setHorizontalAlignment(SwingConstants.CENTER);
-		lblPanelDeUsuario.setFont(new Font("Segoe Print", Font.PLAIN, 21));
-		lblPanelDeUsuario.setForeground(Color.WHITE);
-		lblPanelDeUsuario.setBounds(148, 473, 371, 28);
-		add(lblPanelDeUsuario);
+		JLabel lblPanelDeAdministrador = new JLabel("Panel de administrador");
+		lblPanelDeAdministrador.setHorizontalAlignment(SwingConstants.CENTER);
+		lblPanelDeAdministrador.setForeground(Color.WHITE);
+		lblPanelDeAdministrador.setFont(new Font("Segoe Print", Font.PLAIN, 21));
+		lblPanelDeAdministrador.setBounds(125, 449, 371, 28);
+		add(lblPanelDeAdministrador);
 		
 		
 		siguiente.addActionListener(new ActionListener() {
@@ -99,23 +99,14 @@ public class PanelLogin extends JPanel {
 					String usuarioIntroducido=usuarioEntradaTexto.getText();
 					String contrasenaIntroducida=String.copyValueOf(contrasenaEntradaTexto.getPassword());
 					Statement smt=conexion.createStatement();
-		            ResultSet resultado=smt.executeQuery("select * from usuario where nombre='"+usuarioIntroducido+"' and contraseña='"+contrasenaIntroducida+"';");
+		            ResultSet resultado=smt.executeQuery("select * from administrador where nombre='"+usuarioIntroducido+"' and contraseña='"+contrasenaIntroducida+"';");
 		            resultado.next();
 		            String nombreUsuario=resultado.getString("nombre");
 		            String pass=resultado.getString("contraseña");
 		            
-		            String restaurante=resultado.getString("Restaurante_codigoRestaurante");
-	                Statement smt2=conexion.createStatement();
-	                ResultSet resultado2=smt2.executeQuery("select * from restaurante where codigoRestaurante='"+restaurante+"';");
-	                resultado2.next();
-	                String cif=resultado2.getString("cif");
-	                String nombreRestaurante=resultado2.getString("nombre");
-	                String direccion=resultado2.getString("direccion");
-	                String telefono=resultado2.getString("telefono");
-	                Restaurante restauranteElegido=new Restaurante(cif,nombreRestaurante,direccion,telefono,restaurante);
-	                Usuario usuarioElegido=new Usuario(restauranteElegido,nombreUsuario,pass);
+		           
 	                estePanel.setVisible(false);
-	                ventana.setContentPane(new PanelPedido(usuarioElegido,conexion,ventana));
+	                ventana.setContentPane(new PanelAdministrador(ventana,conexion));
                
 				}catch(SQLException ex) {
 					datosIncorrectos.setForeground(Color.red);
@@ -144,4 +135,3 @@ public class PanelLogin extends JPanel {
     }
 }
 }
-

@@ -8,12 +8,15 @@ import java.awt.event.ActionListener;
 import java.awt.Color;
 
 public class Ventana extends JFrame{
-	PanelLogin panelLogin;	
+	PanelPrincipal panelPrincipal;	
+	
 	
 	public Ventana() {
-		panelLogin=new PanelLogin(this);
-		this.setSize(877,625);
-		setContentPane(panelLogin);
+		setResizable(false);
+
+		panelPrincipal=new PanelPrincipal(this);
+		this.setSize(720,561);
+		setContentPane(panelPrincipal);
 		
 		/*panelLogin.getSiguiente().addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {

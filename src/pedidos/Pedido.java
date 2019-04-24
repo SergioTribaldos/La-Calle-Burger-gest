@@ -37,6 +37,7 @@ public class Pedido {
     private String [] lote;
     private LocalDateTime fechaPedido;
     private Connection conexion;
+    private String[]productos;
  
 
     public Pedido(Usuario usuario,Connection conexion,int[]cantidad) {
@@ -44,6 +45,13 @@ public class Pedido {
         this.fechaPedido = LocalDateTime.now();
         this.usuario = usuario;
         this.conexion = conexion;
+        this.cantidad = cantidad;
+
+    }
+    
+    public Pedido(String[]productos,int[]cantidad) {
+    	         
+        this.productos=productos;
         this.cantidad = cantidad;
 
     }
@@ -65,8 +73,8 @@ public class Pedido {
           ///////////////////MIRAR ESTO//      String horaPedido=horaPedidoCrear.format(DateTimeFormatter.ofPattern("d/M/u k:m"));
              
             //Creamos el pedido
-                smt.executeUpdate("insert into pedido(fecha,usuario_Usuario,Usuario_Restaurante_codigoRestaurante) values("
-                        + "'"+horaPedido+"','"+this.usuario.getUsuario()+"','"+this.usuario.getRestaurante().getCodigoRestaurante()+"');");
+                smt.executeUpdate("insert into pedido(fecha,usuario_Usuario) values("
+                        + "'"+horaPedido+"','"+this.usuario.getUsuario()+"');");
             
             //Creamos un statement nuevo
             Statement smt2=conexion.createStatement();
