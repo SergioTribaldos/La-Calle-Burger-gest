@@ -12,9 +12,9 @@ package producto;
  * @author Sergio
  */
 public class Producto {
-    private final short id;
-    private final String nombre;
-    private final float precio;
+    private short id;
+    private String nombre;
+    private float precio;
     private tipoProducto tipoProducto;
     private double cantidadPorUnidad;
     private unidadDeMedida unidadDeMedida;
@@ -27,9 +27,7 @@ public class Producto {
         this.cantidadPorUnidad = cantidadPorUnidad;
         this.unidadDeMedida = unidadDeMedida;
     }
-
-   
-    
+ 
     
     public enum unidadDeMedida{
         KG,
@@ -67,6 +65,27 @@ public class Producto {
 
     public short getId() {
         return id;
+    }
+    
+    public tipoProducto getTipoProducto(String tipo) {
+    	switch(tipo) {
+    	case "HAMBURGUESA":
+    		return tipoProducto.HAMBURGUESA;
+
+		case "ENTRANTE":
+		    return tipoProducto.ENTRANTE;	
+		    
+		case "SALSA":
+			return tipoProducto.SALSA;
+			
+		case "BOCADILLO":
+			return tipoProducto.BOCADILLO;
+		case "POSTRE":
+			return tipoProducto.POSTRE;
+		default:
+			return null;
+
+    	}
     }
 
     

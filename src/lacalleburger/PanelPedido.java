@@ -36,7 +36,7 @@ public class PanelPedido extends JPanel{
 	public PanelPedido(Usuario usuario,Connection conexion,JFrame ventana) {
 		setBackground(Color.BLACK);
 		this.setVisible(true);
-		this.setSize(980,900);
+		this.setSize(980,700);
 		ventana.setSize(this.getSize());
 		setLayout(new BorderLayout(0, 0));
 		

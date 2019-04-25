@@ -7,7 +7,6 @@ import java.awt.Font;
 import javax.swing.SwingConstants;
 import javax.swing.JButton;
 import javax.swing.JFrame;
-
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
@@ -16,7 +15,7 @@ public class PanelPrincipal extends JPanel {
 		JPanel estePanel=this;
 		setBackground(Color.BLACK);
 		setLayout(null);
-		this.setSize(ventana.getSize());
+		this.setSize(500,500);
 		
 		JLabel lblEligeComoTe = new JLabel("Elige como te quieres logear");
 		lblEligeComoTe.setHorizontalAlignment(SwingConstants.CENTER);
