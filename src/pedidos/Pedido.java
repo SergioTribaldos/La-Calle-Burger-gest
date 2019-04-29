@@ -12,9 +12,11 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import static java.time.format.DateTimeFormatter.RFC_1123_DATE_TIME;
@@ -61,63 +63,45 @@ public class Pedido {
         return listaProductos;
     }
     
-    
-    
+
     public void nuevoPedido(){
         Scanner sc=new Scanner(System.in);
         try {
-            Statement smt=conexion.createStatement();
+            PreparedStatement smt=conexion.prepareStatement("insert into pedido(fecha,usuario_Usuario) values(?,?)");
             ResultSet resultado=smt.executeQuery("select * from producto;");
-            
-            
-            
-            //Recogemos la hora exacta del pedido, que sera la clave primaria
-                LocalDateTime horaPedido=LocalDateTime.now();
-          ///////////////////MIRAR ESTO//      String horaPedido=horaPedidoCrear.format(DateTimeFormatter.ofPattern("d/M/u k:m"));
-             
+
             //Creamos el pedido
-                smt.executeUpdate("insert into pedido(fecha,usuario_Usuario) values("
-                        + "'"+horaPedido+"','"+this.usuario.getUsuario()+"');");
-            
+                smt.setTimestamp(1, new Timestamp(System.currentTimeMillis()));
+                smt.setString(2, this.usuario.getUsuario());
+                smt.executeUpdate();
+                smt.close();
+
             //Creamos un statement nuevo
             Statement smt2=conexion.createStatement();
             ResultSet resultado2=smt2.executeQuery("select max(id) from pedido;");
             resultado2.next();
-            String id_pedido=resultado2.getString(1);
+            int id_pedido=resultado2.getInt(1);
             
-            Statement smt3=conexion.createStatement();
+            PreparedStatement smt3=conexion.prepareStatement("insert into productospedidos(producto_id,pedido_id,cantidad) values (?,?,?)");
             ResultSet resultado3=smt3.executeQuery("select * from producto;");
             int iterador=0;
-            
-            String id_producto="";
+
             //Introducimos los datos en la tabla intermedia de producto y pedido, es decir , el pedido en si
             while(resultado3.next()){
-                id_producto=resultado3.getString("id");
-                
-                
-               /* String r="insert into producto_has_pedido("
-                        + "'"+producto_id+"','"+producto_nombre+"','"+horaPedido+"','"+cantidad.get(iterador)+"','null');";
-                System.out.println(r);*/
-                smt.executeUpdate("insert into productospedidos values("
-                        + "'"+id_producto+"','"+id_pedido+"','"+cantidad[iterador]+"');");
-                iterador++;
+            	
+            	smt3.setInt(1,resultado3.getInt("id"));
+            	smt3.setInt(2, id_pedido);
+            	smt3.setInt(3,cantidad[iterador] );
+            	smt3.addBatch();
+            	iterador++;               
             }
+            smt3.executeBatch();
+            smt3.close();
                 
         } catch (SQLException ex) {
             Logger.getLogger(Pedido.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        
-        
-        /*
-        for(int i=0;i<6;i++){
-            System.out.println("Introduce cantidad para "+this.listaProductos[i].getNombre());
-            cantidad=Integer.parseInt(sc.nextLine());
-            this.cantidad[i]=cantidad;
-           
-        }
-        
-        escribeArchivo();
-                */
+        }   
+     
     }
     
     

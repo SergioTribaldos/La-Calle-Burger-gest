@@ -30,13 +30,15 @@ import java.awt.GridBagConstraints;
 import java.awt.Insets;
 import java.awt.Dimension;
 import javax.swing.SwingConstants;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 public class PanelLogin extends JPanel {
 	JButton siguiente;
 	private JTextField usuarioEntradaTexto;
 	private JPasswordField contrasenaEntradaTexto;
 	
-	public PanelLogin(JFrame ventana) {
+	public PanelLogin(Ventana ventana) {
 		PanelLogin estePanel=this;
 		setBackground(Color.BLACK);
 		this.setSize(new Dimension(807, 566));
@@ -73,6 +75,15 @@ public class PanelLogin extends JPanel {
 		contrasenaEntradaTexto.setBounds(277, 247, 242, 28);
 		add(contrasenaEntradaTexto);
 		siguiente=new JButton("Login");
+		siguiente.addKeyListener(new KeyAdapter() {
+			@Override                                 ////////////////////////////AÑADIR PULSAR ENTER
+			public void keyPressed(KeyEvent e) {
+				if (e.getKeyCode()==KeyEvent.VK_ENTER){
+		            System.out.println("Hello");
+		        }
+				
+			}
+		});
 		siguiente.setBounds(201, 378, 242, 37);
 		add(siguiente);
 		
@@ -93,19 +104,19 @@ public class PanelLogin extends JPanel {
 		
 		siguiente.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				Connection conexion=compruebaConexion(datosIncorrectos);
+				
 
 				try {
 					String usuarioIntroducido=usuarioEntradaTexto.getText();
 					String contrasenaIntroducida=String.copyValueOf(contrasenaEntradaTexto.getPassword());
-					Statement smt=conexion.createStatement();
+					Statement smt=ventana.getConexion().createStatement();
 		            ResultSet resultado=smt.executeQuery("select * from usuario where nombre='"+usuarioIntroducido+"' and contraseña='"+contrasenaIntroducida+"';");
 		            resultado.next();
 		            String nombreUsuario=resultado.getString("nombre");
 		            String pass=resultado.getString("contraseña");
 		            
 		            String restaurante=resultado.getString("Restaurante_codigoRestaurante");
-	                Statement smt2=conexion.createStatement();
+	                Statement smt2=ventana.getConexion().createStatement();
 	                ResultSet resultado2=smt2.executeQuery("select * from restaurante where codigoRestaurante='"+restaurante+"';");
 	                resultado2.next();
 	                String cif=resultado2.getString("cif");
@@ -115,7 +126,7 @@ public class PanelLogin extends JPanel {
 	                Restaurante restauranteElegido=new Restaurante(cif,nombreRestaurante,direccion,telefono,restaurante);
 	                Usuario usuarioElegido=new Usuario(restauranteElegido,nombreUsuario,pass);
 	                estePanel.setVisible(false);
-	                ventana.setContentPane(new PanelPedido(usuarioElegido,conexion,ventana));
+	                ventana.setContentPane(new PanelPedido(usuarioElegido,ventana));
                
 				}catch(SQLException ex) {
 					datosIncorrectos.setForeground(Color.red);
@@ -129,19 +140,6 @@ public class PanelLogin extends JPanel {
 		
 	}
 	
-	public static Connection compruebaConexion(JLabel datosIncorrectos){
-        try {
-        	
-            Connection conexion = DriverManager.getConnection("jdbc:mysql://sql7.freemysqlhosting.net/sql7289249", "sql7289249", "qE87qDQdJB");
-            
-            return conexion;
-        } catch (SQLException ex) {          
-            datosIncorrectos.setForeground(Color.red);
-            datosIncorrectos.setText("Error en la conexion a la base de datos");
-            ex.printStackTrace();
-            
-        return null;       
-    }
-}
+	
 }
 

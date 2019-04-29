@@ -11,21 +11,29 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import producto.Producto;
+import restaurantes.Restaurante;
 
 public class Pedido_info {
 	private String[]productos;
 	private int[] cantidad;
-	private String nombre_restaurante;
+	private Restaurante restaurante;
 	private Timestamp fecha;
 	private Producto producto;
 	
-	public Pedido_info(String[]productos,int[]cantidad,Timestamp fecha,String nombre_restaurante) {
+	public Pedido_info(String[]productos,int[]cantidad,Timestamp fecha,Restaurante restaurante) {
         
         this.productos=productos;
         this.cantidad = cantidad;
         this.fecha =fecha;
-        this.nombre_restaurante=nombre_restaurante;
+        this.restaurante = restaurante;
         this.producto=producto;
+    }
+	
+public Pedido_info(String[]productos,int[]cantidad) {
+        
+        this.productos=productos;
+        this.cantidad = cantidad;
+       
     }
 	
 	public Pedido_info() {
@@ -49,12 +57,22 @@ public class Pedido_info {
 		this.cantidad = cantidad;
 	}
 
-	public String getNombre_restaurante() {
-		return nombre_restaurante;
+	
+
+	public Restaurante getRestaurante() {
+		return restaurante;
 	}
 
-	public void setNombre_restaurante(String nombre_restaurante) {
-		this.nombre_restaurante = nombre_restaurante;
+	public void setRestaurante(Restaurante restaurante) {
+		this.restaurante = restaurante;
+	}
+
+	public Producto getProducto() {
+		return producto;
+	}
+
+	public void setProducto(Producto producto) {
+		this.producto = producto;
 	}
 
 	public Timestamp getFecha() {
@@ -67,13 +85,31 @@ public class Pedido_info {
 	
 	
 	public void escribeArchivo(){
+		String fechaArchivo="";
+		String nombreRestaurante="";
+		
+		if(this.fecha==null) {
+			this.fecha=new Timestamp(System.currentTimeMillis());
+			DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH_mm");
+	        fechaArchivo = dateFormat.format(this.fecha);
+			nombreRestaurante="PEDIDO TOTAL";
+		}else {
+		  DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH_mm");
+       	  fechaArchivo = dateFormat.format(this.fecha);
+       	  nombreRestaurante=this.restaurante.getNombre();
+		}
+				
         FileWriter log=null;
         try {
-        	 DateFormat dateFormat = new SimpleDateFormat("MM-dd-yyyy HH_mm");
-        	  String fecha = dateFormat.format(this.fecha);
+        	
            
-            File logFile=new File("./"+this.nombre_restaurante+" "+fecha +".html");
+            File logFile=new File(nombreRestaurante+" "+fechaArchivo+".html");
             log = new FileWriter(logFile.getAbsoluteFile(),false);
+            
+            DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+            String fecha=dateFormat.format(this.fecha);
+            
+            
             log.append("<!DOCTYPE html>\n" +
 "<html lang=\"en\" dir=\"ltr\">\n" +
 "  <head>\n" +
@@ -102,8 +138,8 @@ public class Pedido_info {
 "\n" +
 "    </style>\n" +
 "  </head>\n" +
-"  <h1>Pedido de </h1>\n" +
-"  <h3>Usuario: </h3>\n" +
+"  <h1>Pedido de "+nombreRestaurante+" </h1>\n" +
+"  <h3>Fecha: "+fecha+" </h3>\n" +
 "\n" +
 "  <body>\n" +
 "    <table>\n" +

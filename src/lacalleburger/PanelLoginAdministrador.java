@@ -58,7 +58,7 @@ public class PanelLoginAdministrador extends JPanel {
 		add(usuario_label);
 		
 		
-		usuarioEntradaTexto = new JTextField();
+		usuarioEntradaTexto = new JTextField("johan");
 		usuarioEntradaTexto.setBounds(277, 214, 242, 28);
 		add(usuarioEntradaTexto);
 		usuarioEntradaTexto.setColumns(10);

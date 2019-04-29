@@ -11,7 +11,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
 public class PanelPrincipal extends JPanel {
-	public PanelPrincipal(JFrame ventana) {
+	public PanelPrincipal(Ventana ventana) {
 		JPanel estePanel=this;
 		setBackground(Color.BLACK);
 		setLayout(null);
