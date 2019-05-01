@@ -9,8 +9,10 @@ import javax.swing.UIManager;
 
 import pedidos.Pedido;
 import pedidos.Pedido_info;
+import producto.Producto;
 import restaurantes.Restaurante;
 import restaurantes.Restaurante.codRestaurante;
+import usuarios.Usuario;
 
 import javax.swing.JTabbedPane;
 import javax.swing.JLabel;
@@ -46,8 +48,12 @@ import javax.swing.border.MatteBorder;
 public class PanelAdministrador extends JPanel{
 	DefaultListModel<String> listModelString;
 	DefaultListModel<Pedido_info> listModelObjeto;
+	ArrayList<Producto> productos;
+	Ventana ventana;
 	
-	public PanelAdministrador(JFrame ventana,Connection conexion) {
+	public PanelAdministrador(Ventana ventan) {
+		this.ventana = ventan;
+
 		listModelString=new DefaultListModel();
 		listModelObjeto=new DefaultListModel();
 		setForeground(Color.ORANGE);
@@ -94,46 +100,62 @@ public class PanelAdministrador extends JPanel{
 		btnRecibirPedidos.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
-					Statement stm=conexion.createStatement();
-					ResultSet resultadoPedidosCompleto=stm.executeQuery("select pedido.*,usuario.Restaurante_codigoRestaurante,productospedidos.*,producto.*,restaurante.*\r\n" + 
-							"from producto\r\n" + 
-							"join productospedidos on producto.id=productospedidos.producto_id\r\n" + 
-							"join pedido on pedido.id=productospedidos.pedido_id\r\n" + 
+					Statement stm=ventana.getConexion().createStatement();				
+					ResultSet resultadoProductos=stm.executeQuery("select * from producto order by id asc");
+					int precio;
+					short id;
+					String nombreProducto;
+					productos=new ArrayList<Producto>();
+					while(resultadoProductos.next()) {
+						nombreProducto=resultadoProductos.getString("nombre");
+						precio=resultadoProductos.getInt("precio");
+						id=(short)resultadoProductos.getInt("id");
+						productos.add(new Producto(id,nombreProducto,precio));
+						
+					}
+					
+					stm.close();
+					resultadoProductos.close();
+					stm=ventana.getConexion().createStatement();
+					
+					
+					
+					
+					ResultSet resultadoPedidosCompleto=stm.executeQuery("select pedido.*,usuario.nombre,productospedidos.*,restaurante.*\r\n" + 
+							"from productospedidos \r\n" + 
+							"join pedido  on pedido.id=productospedidos.pedido_id\r\n" + 
 							"join usuario on pedido.Usuario_usuario=usuario.nombre\r\n" + 
-							"join restaurante on restaurante.codigoRestaurante=usuario.Restaurante_codigoRestaurante order by pedido.id desc;");
+							"join restaurante on usuario.Restaurante_codigoRestaurante=restaurante.codigoRestaurante\r\n" + 
+							"order by pedido_id desc, producto_id asc;");
 					//Crea un arraylist de tipo Pedido_info con todos los pedidos de la base de datos//						
-					int[]cantidad=new int[37];
-					String[]productos=new String[37];
+					ArrayList<Integer> cantidad= new ArrayList<Integer>();
+					
 					Timestamp fecha=null;
 
-					String nombre_restaurante;
+				
 					int iterador=0;
 					while(resultadoPedidosCompleto.next()) {
-						int id=resultadoPedidosCompleto.getInt("id");
-						fecha=resultadoPedidosCompleto.getTimestamp("Fecha");	
-						nombre_restaurante=resultadoPedidosCompleto.getString("Restaurante_codigoRestaurante");
-						cantidad[iterador]=resultadoPedidosCompleto.getInt("cantidad");
-						productos[iterador]=resultadoPedidosCompleto.getString("nombre");
+						//int id=resultadoPedidosCompleto.getInt("id");							
+						cantidad.add(iterador,resultadoPedidosCompleto.getInt("cantidad"));						
 						iterador++;
-						
-						/* private final String cif;
-						    private final String nombre;
-						    private final String direccion;
-						    private final String telefono;
-						    private codRestaurante codigoRestaurante;*/
-						//Añadimos los datos recuperados a los objetos listModelObjeto y listModelString
-						if(productos[36]!=null) {
+
+						if(iterador==37) {
+							String nombreUsuario=(resultadoPedidosCompleto.getString("usuario.nombre"));
 							Restaurante restaurante=new Restaurante(resultadoPedidosCompleto.getString("cif"),
 									                          resultadoPedidosCompleto.getString("restaurante.nombre"),
 									                          resultadoPedidosCompleto.getString("direccion"),
 									                          resultadoPedidosCompleto.getString("telefono"),
 									                          resultadoPedidosCompleto.getString("codigoRestaurante"));
-							listModelObjeto.addElement(new Pedido_info(productos,cantidad,fecha,restaurante));
+							
+									
+							fecha=resultadoPedidosCompleto.getTimestamp("Fecha");
+							
+							Pedido_info pedido= new Pedido_info((short)resultadoPedidosCompleto.getInt("pedido.id"),productos,cantidad,fecha,restaurante,nombreUsuario);
+							listModelObjeto.addElement(pedido);
 							DateFormat dateFormat = new SimpleDateFormat("dd/MM/yy  HH:mm");
 							listModelString.addElement(dateFormat.format(listModelObjeto.get(listModelObjeto.getSize()-1).getFecha())+"              "+listModelObjeto.get(listModelObjeto.getSize()-1).getRestaurante().getNombre());
 							iterador=0;
-							cantidad=new int[37];
-							productos=new String[37];
+							cantidad=new ArrayList<Integer>();
 							
 						}
 				
@@ -161,17 +183,25 @@ public class PanelAdministrador extends JPanel{
 				
 				
 				///calcula la cantidad total del pedido seleccionado///
-				int []cantidadTotal=new int[37];
-				String []listaProductos=listModelObjeto.get(0).getProductos();
-				
+				ArrayList<Integer> cantidadTotal= new ArrayList<Integer>();	
+				Integer[]cantTot=new Integer[listaObjetosSeleccionados.get(0).getCantidad().size()];
+				int suma=0;
 				for(int i=0;i<listaObjetosSeleccionados.size();i++) {
-					for(int r=0;r<listaObjetosSeleccionados.get(i).getCantidad().length;r++) {
-						cantidadTotal[r]+=listaObjetosSeleccionados.get(i).getCantidad()[r];
+					for(int r=0;r<listaObjetosSeleccionados.get(i).getCantidad().size();r++) {
+						cantTot[r]+=listaObjetosSeleccionados.get(i).getCantidad().get(r);
+				
 					}
+	
 				}	
 				
+			
+				
+				for(int f=0;f<cantTot.length;f++) {
+					cantidadTotal.add(cantTot[f]);
+				}
+				
 				///escribe la cantidad total en un archivo///
-				Pedido_info pedidoTotal=new Pedido_info(listaProductos,cantidadTotal);
+				Pedido_info pedidoTotal=new Pedido_info(productos,cantidadTotal);
 				pedidoTotal.escribeArchivo();
 				
 				///escribe cada pedido seleccionado en un archivo
@@ -188,7 +218,7 @@ public class PanelAdministrador extends JPanel{
 				guardarObjetosSeleccionados(list,listaObjetosSeleccionados);
 				
 				for(int f=0;f<listaObjetosSeleccionados.size();f++) {
-					Ventana ventanaFactura=new Ventana(new PanelFactura(listaObjetosSeleccionados.get(f)),conexion);
+					Ventana ventanaFactura=new Ventana(new PanelFactura(listaObjetosSeleccionados.get(f)),ventana.getConexion());
 					
 				}
 				

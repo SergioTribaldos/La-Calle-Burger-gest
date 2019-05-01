@@ -33,13 +33,14 @@ import usuarios.Usuario;
  * @author Sergio
  */
 public class Pedido {
+	private short id;
     private Usuario usuario;
     private Producto[] listaProductos;
     private int [] cantidad;
-    private String [] lote;
     private LocalDateTime fechaPedido;
     private Connection conexion;
-    private String[]productos;
+    
+    private Restaurante restaurante;
  
 
     public Pedido(Usuario usuario,Connection conexion,int[]cantidad) {
@@ -51,12 +52,14 @@ public class Pedido {
 
     }
     
-    public Pedido(String[]productos,int[]cantidad) {
-    	         
-        this.productos=productos;
-        this.cantidad = cantidad;
-        
+    public Pedido(short id,LocalDateTime fechaPedido,Usuario usuario,Restaurante restaurante) {
+    	this.id = id;
+    	this.fechaPedido = fechaPedido;
+    	this.usuario = usuario;
+    	this.restaurante = restaurante;
     }
+    
+   
     
     
     public Producto[] listaProductos(){

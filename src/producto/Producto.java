@@ -15,11 +15,11 @@ public class Producto {
     private short id;
     private String nombre;
     private float precio;
-    private tipoProducto tipoProducto;
+    private String tipoProducto;
     private double cantidadPorUnidad;
     private unidadDeMedida unidadDeMedida;
 
-    public Producto(short id,String nombre, float precio, double cantidadPorUnidad, unidadDeMedida unidadDeMedida, tipoProducto tipoProducto) {
+    public Producto(short id,String nombre, float precio, double cantidadPorUnidad, unidadDeMedida unidadDeMedida, String tipoProducto) {
         this.id = id;
         this.nombre = nombre;
         this.precio = precio;
@@ -27,20 +27,20 @@ public class Producto {
         this.cantidadPorUnidad = cantidadPorUnidad;
         this.unidadDeMedida = unidadDeMedida;
     }
+    
+    public Producto(short id,String nombre,float precio) {
+    	 this.id = id;
+         this.nombre = nombre;
+         this.precio = precio;
+    	
+    }
  
     
     public enum unidadDeMedida{
         KG,
         UD
     }
-    public enum tipoProducto{
-        HAMBURGUESA,
-        ENTRANTE,
-        SALSA,
-        BOCADILLO,
-        POSTRE
-        
-    }
+  
 
     public String getNombre() {
         return nombre;
@@ -51,8 +51,8 @@ public class Producto {
     }
 
 
-    public tipoProducto getTipoProducto() {
-        return tipoProducto;
+    public String getTipoProducto() {
+        return tipoProducto.toUpperCase();
     }
 
     public double getCantidadPorUnidad() {
@@ -66,31 +66,7 @@ public class Producto {
     public short getId() {
         return id;
     }
-    
-    public tipoProducto getTipoProducto(String tipo) {
-    	switch(tipo) {
-    	case "HAMBURGUESA":
-    		return tipoProducto.HAMBURGUESA;
-
-		case "ENTRANTE":
-		    return tipoProducto.ENTRANTE;	
-		    
-		case "SALSA":
-			return tipoProducto.SALSA;
-			
-		case "BOCADILLO":
-			return tipoProducto.BOCADILLO;
-		case "POSTRE":
-			return tipoProducto.POSTRE;
-		default:
-			return null;
-
-    	}
-    }
-
-    
-    
-    
+   
   
 }
 

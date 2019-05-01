@@ -13,6 +13,7 @@ import java.awt.event.WindowEvent;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 public class Ventana extends JFrame{
 	PanelPrincipal panelPrincipal;	
@@ -26,10 +27,13 @@ public class Ventana extends JFrame{
 			public void windowClosing(WindowEvent arg0) {
 				try {
 					conexion.close();
+					System.out.println("Conexion cerrada");
 					
 				} catch (SQLException e) {
+					System.err.println("Conexion NO cerrada");
 					System.exit(ABORT);
 					e.printStackTrace();
+					
 				}
 				
 			}
@@ -44,6 +48,7 @@ public class Ventana extends JFrame{
 	}
 	
 	public Ventana(PanelFactura panelFactura,Connection conexion) {		
+		this.conexion = conexion;
 		setContentPane(panelFactura);
 		this.conexion = conexion;
 		this.setVisible(true);
@@ -68,14 +73,14 @@ public class Ventana extends JFrame{
 	public static Connection compruebaConexion(JFrame ventana){
         try {
         	
-            Connection conexion = DriverManager.getConnection("jdbc:mysql://sql7.freemysqlhosting.net/sql7289249", "sql7289249", "qE87qDQdJB");
-            
+            Connection conexion = DriverManager.getConnection("jdbc:mysql://85.214.120.213", "sergio", "sergio");
+            Statement smt=conexion.createStatement();
+            smt.executeQuery("use lacalle;");
+            smt.executeQuery("SET time_zone = '+2:00';");          
             return conexion;
         } catch (SQLException ex) {          
         	JOptionPane.showMessageDialog(ventana, "Error en la base de datos");
         	System.exit(ABORT);
-          //  datosIncorrectos.setForeground(Color.red);
-            //datosIncorrectos.setText("Error en la conexion a la base de datos");
             ex.printStackTrace();
             
         return null;       

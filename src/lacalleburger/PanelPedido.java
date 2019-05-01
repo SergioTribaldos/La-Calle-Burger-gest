@@ -92,7 +92,7 @@ public class PanelPedido extends JPanel{
 		panel.add(aguja, gbc_aguja);
 		
 		JSpinner aguja_num = new JSpinner();
-		aguja_num.setModel(new SpinnerNumberModel(new Integer(0), new Integer(0), null, new Integer(20)));
+		aguja_num.setModel(new SpinnerNumberModel(new Integer(0), new Integer(0), null, new Integer(1)));
 		aguja_num.setFont(new Font("Tahoma", Font.PLAIN, 27));
 		GridBagConstraints gbc_aguja_num = new GridBagConstraints();
 		gbc_aguja_num.fill = GridBagConstraints.BOTH;
@@ -133,7 +133,7 @@ public class PanelPedido extends JPanel{
 		panel.add(angus, gbc_angus);
 		
 		JSpinner angus_num = new JSpinner();
-		angus_num.setModel(new SpinnerNumberModel(new Integer(0), new Integer(0), null, new Integer(20)));
+		angus_num.setModel(new SpinnerNumberModel(new Integer(0), new Integer(0), null, new Integer(1)));
 		angus_num.setFont(new Font("Tahoma", Font.PLAIN, 27));
 		GridBagConstraints gbc_angus_num = new GridBagConstraints();
 		gbc_angus_num.fill = GridBagConstraints.BOTH;
@@ -173,7 +173,7 @@ public class PanelPedido extends JPanel{
 		panel.add(entrana, gbc_entrana);
 		
 		JSpinner entrana_num = new JSpinner();
-		entrana_num.setModel(new SpinnerNumberModel(new Integer(0), new Integer(0), null, new Integer(20)));
+		entrana_num.setModel(new SpinnerNumberModel(new Integer(0), new Integer(0), null, new Integer(1)));
 		entrana_num.setFont(new Font("Tahoma", Font.PLAIN, 27));
 		GridBagConstraints gbc_entrana_num = new GridBagConstraints();
 		gbc_entrana_num.fill = GridBagConstraints.BOTH;
@@ -213,7 +213,7 @@ public class PanelPedido extends JPanel{
 		panel.add(garbanzos, gbc_garbanzos);
 		
 		JSpinner garbanzos_num = new JSpinner();
-		garbanzos_num.setModel(new SpinnerNumberModel(new Integer(0), new Integer(0), null, new Integer(30)));
+		garbanzos_num.setModel(new SpinnerNumberModel(new Integer(0), new Integer(0), null, new Integer(1)));
 		garbanzos_num.setFont(new Font("Tahoma", Font.PLAIN, 27));
 		GridBagConstraints gbc_garbanzos_num = new GridBagConstraints();
 		gbc_garbanzos_num.fill = GridBagConstraints.BOTH;
@@ -253,7 +253,7 @@ public class PanelPedido extends JPanel{
 		panel.add(lentejas, gbc_lentejas);
 		
 		JSpinner lentejas_num = new JSpinner();
-		lentejas_num.setModel(new SpinnerNumberModel(new Integer(0), new Integer(0), null, new Integer(30)));
+		lentejas_num.setModel(new SpinnerNumberModel(new Integer(0), new Integer(0), null, new Integer(1)));
 		lentejas_num.setFont(new Font("Tahoma", Font.PLAIN, 27));
 		GridBagConstraints gbc_lentejas_num = new GridBagConstraints();
 		gbc_lentejas_num.fill = GridBagConstraints.BOTH;
@@ -293,7 +293,7 @@ public class PanelPedido extends JPanel{
 		panel.add(vacio, gbc_vacio);
 		
 		JSpinner vacio_num = new JSpinner();
-		vacio_num.setModel(new SpinnerNumberModel(new Integer(0), new Integer(0), null, new Integer(20)));
+		vacio_num.setModel(new SpinnerNumberModel(new Integer(0), new Integer(0), null, new Integer(1)));
 		vacio_num.setFont(new Font("Tahoma", Font.PLAIN, 27));
 		GridBagConstraints gbc_vacio_num = new GridBagConstraints();
 		gbc_vacio_num.fill = GridBagConstraints.BOTH;
@@ -333,7 +333,7 @@ public class PanelPedido extends JPanel{
 		panel.add(doble, gbc_doble);
 		
 		JSpinner doble_num = new JSpinner();
-		doble_num.setModel(new SpinnerNumberModel(new Integer(0), new Integer(0), null, new Integer(30)));
+		doble_num.setModel(new SpinnerNumberModel(new Integer(0), new Integer(0), null, new Integer(1)));
 		doble_num.setFont(new Font("Tahoma", Font.PLAIN, 27));
 		GridBagConstraints gbc_doble_num = new GridBagConstraints();
 		gbc_doble_num.fill = GridBagConstraints.BOTH;
@@ -341,7 +341,7 @@ public class PanelPedido extends JPanel{
 		gbc_doble_num.gridx = 1;
 		gbc_doble_num.gridy = 7;
 		panel.add(doble_num, gbc_doble_num);
-		
+
 		JLabel vegana = new JLabel("MAYONESA VEGANA bolsa 500 g");
 		vegana.setForeground(new Color(248, 248, 255));
 		vegana.setFont(new Font("Dialog", Font.BOLD, 16));

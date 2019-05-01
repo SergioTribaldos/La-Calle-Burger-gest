@@ -35,8 +35,10 @@ public class PanelLoginAdministrador extends JPanel {
 	JButton siguiente;
 	private JTextField usuarioEntradaTexto;
 	private JPasswordField contrasenaEntradaTexto;
+	private Ventana ventana;
 	
-	public PanelLoginAdministrador(JFrame ventana) {
+	public PanelLoginAdministrador(Ventana ventan) {
+		this.ventana=ventan;
 		PanelLoginAdministrador estePanel=this;
 		setBackground(Color.BLACK);
 		this.setSize(new Dimension(807, 566));
@@ -93,12 +95,11 @@ public class PanelLoginAdministrador extends JPanel {
 		
 		siguiente.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				Connection conexion=compruebaConexion(datosIncorrectos);
 
 				try {
 					String usuarioIntroducido=usuarioEntradaTexto.getText();
 					String contrasenaIntroducida=String.copyValueOf(contrasenaEntradaTexto.getPassword());
-					Statement smt=conexion.createStatement();
+					Statement smt=ventana.getConexion().createStatement();
 		            ResultSet resultado=smt.executeQuery("select * from administrador where nombre='"+usuarioIntroducido+"' and contraseña='"+contrasenaIntroducida+"';");
 		            resultado.next();
 		            String nombreUsuario=resultado.getString("nombre");
@@ -106,7 +107,7 @@ public class PanelLoginAdministrador extends JPanel {
 		            
 		           
 	                estePanel.setVisible(false);
-	                ventana.setContentPane(new PanelAdministrador(ventana,conexion));
+	                ventana.setContentPane(new PanelAdministrador(ventana));
                
 				}catch(SQLException ex) {
 					datosIncorrectos.setForeground(Color.red);
@@ -120,18 +121,5 @@ public class PanelLoginAdministrador extends JPanel {
 		
 	}
 	
-	public static Connection compruebaConexion(JLabel datosIncorrectos){
-        try {
-        	
-            Connection conexion = DriverManager.getConnection("jdbc:mysql://sql7.freemysqlhosting.net/sql7289249", "sql7289249", "qE87qDQdJB");
-            
-            return conexion;
-        } catch (SQLException ex) {          
-            datosIncorrectos.setForeground(Color.red);
-            datosIncorrectos.setText("Error en la conexion a la base de datos");
-            ex.printStackTrace();
-            
-        return null;       
-    }
-}
+
 }
