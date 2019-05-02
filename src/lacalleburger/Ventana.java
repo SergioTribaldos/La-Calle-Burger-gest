@@ -4,6 +4,9 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+
+import usuarios.Usuario;
+
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -16,7 +19,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 public class Ventana extends JFrame{
-	PanelPrincipal panelPrincipal;	
+	JPanel panelActual;	
 	Connection conexion;
 	
 	
@@ -40,17 +43,16 @@ public class Ventana extends JFrame{
 		});
 		
 		setResizable(false);
-		panelPrincipal=new PanelPrincipal(this);
+		panelActual=new PanelPrincipal(this);
 		conexion=compruebaConexion(this);
 		this.setSize(720,561);
-		setContentPane(panelPrincipal);
+		setContentPane(panelActual);
 
 	}
 	
 	public Ventana(PanelFactura panelFactura,Connection conexion) {		
 		this.conexion = conexion;
 		setContentPane(panelFactura);
-		this.conexion = conexion;
 		this.setVisible(true);
 		
 		setResizable(false);
@@ -70,13 +72,28 @@ public class Ventana extends JFrame{
 		return this;
 	}
 	
+	
+	
+	public JPanel getPanelActual() {
+		return panelActual;
+	}
+
+	public void setPanelActual(JPanel panelActual) {
+		this.panelActual = panelActual;
+	}
+
+	public void setConexion(Connection conexion) {
+		this.conexion = conexion;
+	}
+
 	public static Connection compruebaConexion(JFrame ventana){
         try {
         	
             Connection conexion = DriverManager.getConnection("jdbc:mysql://85.214.120.213", "sergio", "sergio");
             Statement smt=conexion.createStatement();
             smt.executeQuery("use lacalle;");
-            smt.executeQuery("SET time_zone = '+2:00';");          
+            smt.executeQuery("SET time_zone = '+2:00';");
+            smt.close();
             return conexion;
         } catch (SQLException ex) {          
         	JOptionPane.showMessageDialog(ventana, "Error en la base de datos");
@@ -86,5 +103,14 @@ public class Ventana extends JFrame{
         return null;       
     }
 }
+	public void cambiaPanel(JPanel panelActual,JPanel panelAnterior) {
+		this.panelActual=panelActual;
+		this.setContentPane(panelActual);
+		if(panelAnterior!=null) {
+			panelAnterior.setVisible(false);
+		}
 
+		panelActual.setVisible(true);
+		
+	}
 }

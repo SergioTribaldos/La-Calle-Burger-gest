@@ -33,13 +33,14 @@ import javax.swing.SwingConstants;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
-public class PanelLogin extends JPanel {
+public class PanelLoginUsuario extends JPanel {
 	JButton siguiente;
 	private JTextField usuarioEntradaTexto;
 	private JPasswordField contrasenaEntradaTexto;
+	private Ventana ventana;
 	
-	public PanelLogin(Ventana ventana) {
-		PanelLogin estePanel=this;
+	public PanelLoginUsuario(Ventana ventana) {
+
 		setBackground(Color.BLACK);
 		this.setSize(new Dimension(807, 566));
 		setLayout(null);
@@ -89,7 +90,7 @@ public class PanelLogin extends JPanel {
 		
 		
 		JLabel lblNewLabel = new JLabel("New label");
-		lblNewLabel.setIcon(new ImageIcon(PanelLogin.class.getResource("/descarga.png")));
+		lblNewLabel.setIcon(new ImageIcon(PanelLoginUsuario.class.getResource("/descarga.png")));
 		
 		lblNewLabel.setBounds(23, 6, 226, 192);
 		add(lblNewLabel);
@@ -125,8 +126,9 @@ public class PanelLogin extends JPanel {
 	                String telefono=resultado2.getString("telefono");
 	                Restaurante restauranteElegido=new Restaurante(cif,nombreRestaurante,direccion,telefono,restaurante);
 	                Usuario usuarioElegido=new Usuario(restauranteElegido,nombreUsuario,pass);
-	                estePanel.setVisible(false);
-	                ventana.setContentPane(new PanelPedido(usuarioElegido,ventana));
+	                
+	               
+	                ventana.cambiaPanel(new PanelPedido(usuarioElegido,ventana),PanelLoginUsuario.this);
                
 				}catch(SQLException ex) {
 					datosIncorrectos.setForeground(Color.red);

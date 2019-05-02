@@ -47,121 +47,78 @@ import javax.swing.border.MatteBorder;
 
 public class PanelAdministrador extends JPanel{
 	DefaultListModel<String> listModelString;
-	DefaultListModel<Pedido_info> listModelObjeto;
+	DefaultListModel<Pedido> listModelObjeto;
 	ArrayList<Producto> productos;
+	
 	Ventana ventana;
+	private JButton btnGenerarFactura;
+	private JList list_1;
+	private JButton btnGuardarPedidos;
+	private JButton btnRecibirPedidos;
+	private JTabbedPane tabbedPane;
 	
 	public PanelAdministrador(Ventana ventan) {
 		this.ventana = ventan;
-
+		
+		initComponents();
+		
 		listModelString=new DefaultListModel();
 		listModelObjeto=new DefaultListModel();
-		setForeground(Color.ORANGE);
-		setLayout(null);
-		ventana.setSize(1200,800);
 		
-		
-		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
-		tabbedPane.setBounds(0, 0, 672, 570);
-		add(tabbedPane);
-		ventana.setSize(tabbedPane.getSize());
-		
-		JPanel panelRecibirPedidos = new JPanel();
-		panelRecibirPedidos.setBorder(null);
-		tabbedPane.addTab("Recibir pedidos", null, panelRecibirPedidos, null);
-		tabbedPane.setEnabledAt(0, true);
-		panelRecibirPedidos.setLayout(null);
-		
-		
-		JList list = new JList();
-		list.setFont(new Font("Tahoma", Font.PLAIN, 17));
-		list.setBounds(257, 70, 350, 390);
-		panelRecibirPedidos.add(list);
-		
-		JButton btnGuardarPedidos = new JButton("Guardar pedidos");
-		btnGuardarPedidos.setBounds(35, 125, 202, 46);
-		panelRecibirPedidos.add(btnGuardarPedidos);
 
-		JButton btnRecibirPedidos = new JButton("Recibir pedidos");
-		btnRecibirPedidos.setBounds(35, 61, 202, 46);
-		panelRecibirPedidos.add(btnRecibirPedidos);
-		
-		JLabel lblNewLabel = new JLabel("       FECHA                   RESTAURANTE");
-		lblNewLabel.setFont(new Font("Verdana", Font.BOLD, 16));
-		lblNewLabel.setForeground(Color.BLACK);
-		lblNewLabel.setBackground(Color.BLUE);
-		lblNewLabel.setBounds(257, 32, 350, 38);
-		panelRecibirPedidos.add(lblNewLabel);
-		
-		JButton btnGenerarFactura = new JButton("Generar factura");		
-		btnGenerarFactura.setBounds(35, 194, 202, 46);
-		panelRecibirPedidos.add(btnGenerarFactura);
-		
 		btnRecibirPedidos.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
-					Statement stm=ventana.getConexion().createStatement();				
-					ResultSet resultadoProductos=stm.executeQuery("select * from producto order by id asc");
-					int precio;
-					short id;
-					String nombreProducto;
-					productos=new ArrayList<Producto>();
-					while(resultadoProductos.next()) {
-						nombreProducto=resultadoProductos.getString("nombre");
-						precio=resultadoProductos.getInt("precio");
-						id=(short)resultadoProductos.getInt("id");
-						productos.add(new Producto(id,nombreProducto,precio));
-						
-					}
 					
-					stm.close();
-					resultadoProductos.close();
-					stm=ventana.getConexion().createStatement();
-					
-					
-					
-					
+					productos=Producto.recogeInformacionProductos(ventana.getConexion());
+										
+					Statement stm=ventana.getConexion().createStatement();
 					ResultSet resultadoPedidosCompleto=stm.executeQuery("select pedido.*,usuario.nombre,productospedidos.*,restaurante.*\r\n" + 
 							"from productospedidos \r\n" + 
 							"join pedido  on pedido.id=productospedidos.pedido_id\r\n" + 
 							"join usuario on pedido.Usuario_usuario=usuario.nombre\r\n" + 
-							"join restaurante on usuario.Restaurante_codigoRestaurante=restaurante.codigoRestaurante\r\n" + 
+							"join restaurante on usuario.Restaurante_codigoRestaurante=restaurante.codigoRestaurante\r\n"
+							+ " where pedido.facturado is null " + 
 							"order by pedido_id desc, producto_id asc;");
 					//Crea un arraylist de tipo Pedido_info con todos los pedidos de la base de datos//						
-					ArrayList<Integer> cantidad= new ArrayList<Integer>();
-					
+					int[] cantidad= new int[productos.size()];
 					Timestamp fecha=null;
 
 				
 					int iterador=0;
-					while(resultadoPedidosCompleto.next()) {
-						//int id=resultadoPedidosCompleto.getInt("id");							
-						cantidad.add(iterador,resultadoPedidosCompleto.getInt("cantidad"));						
+					while(resultadoPedidosCompleto.next()) {					
+						cantidad[iterador]=resultadoPedidosCompleto.getInt("cantidad");						
 						iterador++;
 
 						if(iterador==37) {
-							String nombreUsuario=(resultadoPedidosCompleto.getString("usuario.nombre"));
+
 							Restaurante restaurante=new Restaurante(resultadoPedidosCompleto.getString("cif"),
 									                          resultadoPedidosCompleto.getString("restaurante.nombre"),
 									                          resultadoPedidosCompleto.getString("direccion"),
 									                          resultadoPedidosCompleto.getString("telefono"),
 									                          resultadoPedidosCompleto.getString("codigoRestaurante"));
+							Usuario usuario=new Usuario(resultadoPedidosCompleto.getString("usuario.nombre"),restaurante);
+	
+							//fecha=resultadoPedidosCompleto.getTimestamp("Fecha");
 							
-									
-							fecha=resultadoPedidosCompleto.getTimestamp("Fecha");
-							
-							Pedido_info pedido= new Pedido_info((short)resultadoPedidosCompleto.getInt("pedido.id"),productos,cantidad,fecha,restaurante,nombreUsuario);
+							Pedido pedido=new Pedido((short)resultadoPedidosCompleto.getInt("pedido.id"),
+															resultadoPedidosCompleto.getTimestamp("Fecha"),
+															productos,
+															cantidad,
+															usuario);
+							//Pedido_info pedido= new Pedido_info((short)resultadoPedidosCompleto.getInt("pedido.id"),productos,cantidad,fecha,restaurante,nombreUsuario);
 							listModelObjeto.addElement(pedido);
 							DateFormat dateFormat = new SimpleDateFormat("dd/MM/yy  HH:mm");
-							listModelString.addElement(dateFormat.format(listModelObjeto.get(listModelObjeto.getSize()-1).getFecha())+"              "+listModelObjeto.get(listModelObjeto.getSize()-1).getRestaurante().getNombre());
+							listModelString.addElement(dateFormat.format(listModelObjeto.get(listModelObjeto.getSize()-1).getFechaPedido())+""
+														+ "              "+listModelObjeto.get(listModelObjeto.getSize()-1).getUsuario().getRestaurante().getNombre());
 							iterador=0;
-							cantidad=new ArrayList<Integer>();
+							cantidad=new int[productos.size()];
 							
 						}
 				
 					}
 
-					list.setModel(listModelString);
+					list_1.setModel(listModelString);
 					btnRecibirPedidos.setEnabled(false);
 
 				} catch (SQLException ex) {
@@ -173,29 +130,26 @@ public class PanelAdministrador extends JPanel{
 		});
 		
 		
-		ArrayList<Pedido_info> listaObjetosSeleccionados = new ArrayList<Pedido_info>();
+		ArrayList<Pedido> listaObjetosSeleccionados = new ArrayList<Pedido>();
 		
 		btnGuardarPedidos.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
 				//pasa los objetos seleccionados en un ArrayList
-				guardarObjetosSeleccionados(list,listaObjetosSeleccionados);
+				guardarObjetosSeleccionados(list_1,listaObjetosSeleccionados);
 				
 				
 				///calcula la cantidad total del pedido seleccionado///
 				ArrayList<Integer> cantidadTotal= new ArrayList<Integer>();	
-				Integer[]cantTot=new Integer[listaObjetosSeleccionados.get(0).getCantidad().size()];
+				int[]cantTot=new int[productos.size()];
 				int suma=0;
+				
 				for(int i=0;i<listaObjetosSeleccionados.size();i++) {
-					for(int r=0;r<listaObjetosSeleccionados.get(i).getCantidad().size();r++) {
-						cantTot[r]+=listaObjetosSeleccionados.get(i).getCantidad().get(r);
-				
+					for(int r=0;r<listaObjetosSeleccionados.get(i).getCantidad().length;r++) {						
+						cantTot[r]+=listaObjetosSeleccionados.get(i).getCantidad()[r];				
 					}
-	
 				}	
-				
-			
-				
+	
 				for(int f=0;f<cantTot.length;f++) {
 					cantidadTotal.add(cantTot[f]);
 				}
@@ -215,10 +169,11 @@ public class PanelAdministrador extends JPanel{
 		
 		btnGenerarFactura.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				guardarObjetosSeleccionados(list,listaObjetosSeleccionados);
+				guardarObjetosSeleccionados(list_1,listaObjetosSeleccionados);
 				
 				for(int f=0;f<listaObjetosSeleccionados.size();f++) {
-					Ventana ventanaFactura=new Ventana(new PanelFactura(listaObjetosSeleccionados.get(f)),ventana.getConexion());
+					PanelFactura nuevo=new PanelFactura(listaObjetosSeleccionados.get(f),ventana);
+					Ventana ventanaFactura=new Ventana(nuevo,ventana.getConexion());
 					
 				}
 				
@@ -229,8 +184,7 @@ public class PanelAdministrador extends JPanel{
 		});
 		
 
-		JPanel panel_1 = new JPanel();
-		tabbedPane.addTab("New tab", null, panel_1, null);
+		
 		
 	}
 	
@@ -252,6 +206,55 @@ public class PanelAdministrador extends JPanel{
 		LocalDateTime y=r.toLocalDateTime();
 		y.format(DateTimeFormatter.ofPattern("dd/MM/u-hh:mm"));
 		return y.format(DateTimeFormatter.ofPattern("dd/MM/u-hh:mm"))+"    ";
+		
+	}
+	
+	public void initComponents() {
+		
+		setForeground(Color.ORANGE);
+		setLayout(null);
+		ventana.setSize(1200,800);
+		
+		
+		tabbedPane = new JTabbedPane(JTabbedPane.TOP);
+		tabbedPane.setBounds(0, 0, 672, 570);
+		add(tabbedPane);
+		ventana.setSize(tabbedPane.getSize());
+		
+		JPanel panelRecibirPedidos = new JPanel();
+		panelRecibirPedidos.setBorder(null);
+		tabbedPane.addTab("Recibir pedidos", null, panelRecibirPedidos, null);
+		tabbedPane.setEnabledAt(0, true);
+		panelRecibirPedidos.setLayout(null);
+		
+		
+		list_1 = new JList();
+		list_1.setFont(new Font("Tahoma", Font.PLAIN, 17));
+		list_1.setBounds(257, 70, 350, 390);
+		panelRecibirPedidos.add(list_1);
+		
+		btnGuardarPedidos = new JButton("Guardar pedidos");
+		btnGuardarPedidos.setBounds(35, 125, 202, 46);
+		panelRecibirPedidos.add(btnGuardarPedidos);
+
+		btnRecibirPedidos = new JButton("Recibir pedidos");
+		btnRecibirPedidos.setBounds(35, 61, 202, 46);
+		panelRecibirPedidos.add(btnRecibirPedidos);
+		
+		JLabel lblNewLabel = new JLabel("       FECHA                   RESTAURANTE");
+		lblNewLabel.setFont(new Font("Verdana", Font.BOLD, 16));
+		lblNewLabel.setForeground(Color.BLACK);
+		lblNewLabel.setBackground(Color.BLUE);
+		lblNewLabel.setBounds(257, 32, 350, 38);
+		panelRecibirPedidos.add(lblNewLabel);
+		
+		btnGenerarFactura = new JButton("Generar factura");		
+		btnGenerarFactura.setBounds(35, 194, 202, 46);
+		panelRecibirPedidos.add(btnGenerarFactura);
+		
+		JPanel panel_1 = new JPanel();
+		tabbedPane.addTab("New tab", null, panel_1, null);
+		
 		
 	}
 }

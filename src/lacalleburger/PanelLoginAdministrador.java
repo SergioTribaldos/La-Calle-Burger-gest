@@ -80,7 +80,7 @@ public class PanelLoginAdministrador extends JPanel {
 		
 		
 		JLabel lblNewLabel = new JLabel("New label");
-		lblNewLabel.setIcon(new ImageIcon(PanelLogin.class.getResource("/descarga.png")));
+		lblNewLabel.setIcon(new ImageIcon(PanelLoginUsuario.class.getResource("/descarga.png")));
 		
 		lblNewLabel.setBounds(23, 6, 226, 192);
 		add(lblNewLabel);
@@ -105,9 +105,7 @@ public class PanelLoginAdministrador extends JPanel {
 		            String nombreUsuario=resultado.getString("nombre");
 		            String pass=resultado.getString("contraseña");
 		            
-		           
-	                estePanel.setVisible(false);
-	                ventana.setContentPane(new PanelAdministrador(ventana));
+		            ventana.cambiaPanel(new PanelAdministrador(ventana), PanelLoginAdministrador.this);	              
                
 				}catch(SQLException ex) {
 					datosIncorrectos.setForeground(Color.red);

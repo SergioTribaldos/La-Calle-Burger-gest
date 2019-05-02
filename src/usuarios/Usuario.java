@@ -29,6 +29,11 @@ public class Usuario {
         this.restaurante = restaurante;
       
     }
+    
+    public Usuario(String usuario,Restaurante restaurante) {
+    	this.usuario = usuario;
+        this.restaurante = restaurante;
+    }
 
     public String getUsuario() {
         return usuario;
@@ -42,13 +47,6 @@ public class Usuario {
         return restaurante;
     }
     
-    
-
-    public void hacerPedido(Connection conexion){
-        System.out.println("Panel de control de pedidos, usuario "+this.usuario+" Restaurante: "+this.restaurante.getNombre());
-        //Pedido actual=new Pedido();
-       // actual.nuevoPedido();
-    }
 
     
     

@@ -1,5 +1,11 @@
 package producto;
 
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -67,6 +73,37 @@ public class Producto {
         return id;
     }
    
-  
+    /*
+     * Consulta la tabla producto de la base de datos, los mete en un arrayList y los devuelve
+     */
+    public static ArrayList<Producto> recogeInformacionProductos(Connection conexion){  	
+    	try {
+    		Statement stm=conexion.createStatement();				
+    		ResultSet resultadoProductos=stm.executeQuery("select * from producto order by id asc");
+    		int precio;
+    		short id;
+    		String nombreProducto;
+    		
+    		ArrayList<Producto> productos=new ArrayList<Producto>();
+    		while(resultadoProductos.next()) {
+    			nombreProducto=resultadoProductos.getString("nombre");
+    			precio=resultadoProductos.getInt("precio");
+    			id=(short)resultadoProductos.getInt("id");
+    			productos.add(new Producto(id,nombreProducto,precio));
+    			
+    		}
+
+    		stm.close();
+    		resultadoProductos.close();
+    		
+    		return productos;
+    	}catch (SQLException ex) {
+			// TODO Auto-generated catch block
+			ex.printStackTrace();
+			return null;
+		}
+    	
+    	
+    }
 }
 

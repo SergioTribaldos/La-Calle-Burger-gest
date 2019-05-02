@@ -12,9 +12,9 @@ import java.awt.event.ActionEvent;
 
 public class PanelPrincipal extends JPanel {
 	private Ventana ventana;
-	public PanelPrincipal(Ventana ventan) {
-		this.ventana = ventan;
-		JPanel estePanel=this;
+	
+	public PanelPrincipal(Ventana ventana) {
+		this.ventana = ventana;
 		setBackground(Color.BLACK);
 		setLayout(null);
 		this.setSize(500,500);
@@ -29,9 +29,12 @@ public class PanelPrincipal extends JPanel {
 		JButton usuario = new JButton("Usuario");
 		usuario.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				PanelLogin panelLogin=new PanelLogin(ventana);
+				
+				ventana.cambiaPanel(new PanelLoginUsuario(ventana),PanelPrincipal.this);
+				
+				/*PanelLogin panelLogin=new PanelLogin(ventana);
 				ventana.setContentPane(panelLogin);
-				estePanel.setVisible(false);
+				estePanel.setVisible(false);*/
 				
 				
 			}
@@ -42,9 +45,12 @@ public class PanelPrincipal extends JPanel {
 		JButton administrador = new JButton("Administrador");
 		administrador.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				
+				ventana.cambiaPanel(new PanelLoginAdministrador(ventana),PanelPrincipal.this);
+				/*
 				PanelLoginAdministrador panelLoginAdministrador=new PanelLoginAdministrador(ventana);
 				ventana.setContentPane(panelLoginAdministrador);
-				estePanel.setVisible(false);
+				estePanel.setVisible(false);*/
 				
 			}
 		});

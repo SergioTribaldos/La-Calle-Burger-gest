@@ -75,12 +75,14 @@ public class PanelFactura extends JPanel{
 	private JTextField sacher_lote;
 	private JTextField zanahoria_lote;
 	
-	private Pedido_info pedido_info;
+	private Pedido pedido;
+	private Ventana ventana;
 	
-	public PanelFactura(Pedido_info pedido) {
-		this.pedido_info = pedido;
+	public PanelFactura(Pedido pedido,Ventana ventana) {
+		this.pedido = pedido;
+		this.ventana = ventana;
 		setBackground(Color.BLACK);
-		this.setSize(1200,900);
+		this.setSize(1500,900);
 		setLayout(new BorderLayout(0, 0));
 		
 
@@ -97,7 +99,7 @@ public class PanelFactura extends JPanel{
 		gbl_panel.columnWeights = new double[]{1.0, 0.0, 0.0, 1.0, 0.0, 0.0};
 		gbl_panel.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 1.0};
 		panel.setLayout(gbl_panel);
-		JLabel lblNewLabel = new JLabel(pedido.getRestaurante().getNombre()+" "+pedido.getRestaurante().getDireccion()+" "+pedido.getRestaurante().getTelefono());
+		JLabel lblNewLabel = new JLabel(pedido.getUsuario().getRestaurante().getNombre()+" "+pedido.getUsuario().getRestaurante().getDireccion()+" "+pedido.getUsuario().getRestaurante().getTelefono());
 		lblNewLabel.setFont(new Font("SansSerif", Font.PLAIN, 23));
 		lblNewLabel.setForeground(Color.WHITE);
 		lblNewLabel.setBackground(Color.WHITE);
@@ -1282,8 +1284,8 @@ public class PanelFactura extends JPanel{
 		gbc_btnEnviar.gridy = 25;
 		panel.add(btnEnviar, gbc_btnEnviar);
 		
-		Integer cantidad[]=new Integer [pedido_info.getCantidad().size()];
-		cantidad=pedido_info.getCantidad().toArray(new Integer[pedido_info.getCantidad().size()]);
+		int cantidad[]=pedido.getCantidad();
+		//cantidad=pedido.getCantidad().toArray(new Integer[pedido_info.getCantidad().size()]);
 		
 		aguja_num.setText(String.valueOf(cantidad[0]));
 		angus_num.setText(String.valueOf(cantidad[1]));
@@ -1325,18 +1327,29 @@ public class PanelFactura extends JPanel{
 		
 		
 		
-		
+		boolean[] pulsado= {false};
 		btnEnviar.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
-				System.out.println("fgdgdf");
+				if(pulsado[0]==false) {
+					btnEnviar.setText("Pulsa de nuevo para generar la factura");
+					pulsado[0]=true;
+					
+					
+				}else {
 				String[]lote=recogeLotes();
-				pedido_info.setLote(lote);
-				pedido_info.generaFactura();
+				pedido.setLote(lote);
+				pedido.generaFactura();
+				pedido.actualizaPedidoConLotes(ventana.getConexion());
+				btnEnviar.setEnabled(false);
+				btnEnviar.setText("La factura ha sido generada y guardada en la base de datos!");
+			}
 			}
 		});
 		
+		
 	}
+	
 	
 	public String[] recogeLotes() {
 		String[]lote=new String[37];

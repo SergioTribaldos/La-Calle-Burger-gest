@@ -33,9 +33,81 @@ import java.awt.Insets;
 import javax.swing.SwingConstants;
 
 public class PanelPedido extends JPanel{
+	private Usuario usuario;
+	private Ventana ventana;
+	
+	private JButton btnEnviar;
+	private JSpinner pimiento_num;
+	private JSpinner calambrito_num;
+	private JSpinner vacio_num;
+	private JSpinner chimichurri_num;
+	private JSpinner salteado_num;
+	private JSpinner vegana_num;
+	private JSpinner ensCol_num;
+	private JSpinner aguja_num;
+	private JSpinner pibil_num;
+	private JSpinner alitas_num;
+	private JSpinner cesar_num;
+	private JSpinner entrana_num;
+	private JSpinner toffee_num;
+	private JSpinner oreo_num;
+	private JSpinner doble_num;
+	private JSpinner lacalle_num;
+	private JSpinner ketchup_num;
+	private JSpinner trufa_num;
+	private JSpinner garbanzos_num;
+	private JSpinner brocheta_num;
+	private JSpinner bbq_num;
+	private JSpinner fingers_num;
+	private JSpinner salchichas_num;
+	private JSpinner callejera_num;
+	private JSpinner zanahoria_num;
+	private JSpinner bacon_num;
+	private JSpinner salsaAlitas_num;
+	private JSpinner costillas_num;
+	private JSpinner angus_num;
+	private JSpinner lentejas_num;
+	private JSpinner cebolla_num;
+	private JSpinner portobello_num;
+	private JSpinner sacher_num;
+	private JSpinner entrecot_num;
+	private JSpinner pollo_num;
+	private JSpinner tartaQueso_num;
+	private JSpinner sweetChili_num;
+	
 	public PanelPedido(Usuario usuario,Ventana ventana) {
+		
+		this.usuario = usuario;
+		this.ventana = ventana;
+		
+		initComponents();
+
+		boolean[] pulsado= {false};
+		
+		btnEnviar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				if(pulsado[0]==false) {
+					btnEnviar.setText("Pulsa de nuevo para enviar el pedido");
+					pulsado[0]=true;
+				}else {
+					
+					int []cantidad= {(Integer)aguja_num.getValue(),(Integer)angus_num.getValue(),(Integer)entrana_num.getValue(),(Integer)garbanzos_num.getValue(),(Integer)lentejas_num.getValue(),(Integer)vacio_num.getValue(),(Integer)doble_num.getValue(),(Integer)alitas_num.getValue(),(Integer)bacon_num.getValue(),(Integer)cebolla_num.getValue(),(Integer)portobello_num.getValue(),(Integer)costillas_num.getValue(),(Integer)brocheta_num.getValue(),(Integer)fingers_num.getValue(),(Integer)pimiento_num.getValue(),(Integer)pollo_num.getValue(),(Integer)calambrito_num.getValue(),(Integer)salteado_num.getValue(),(Integer)ketchup_num.getValue(),(Integer)lacalle_num.getValue(),(Integer)chimichurri_num.getValue(),(Integer)trufa_num.getValue(),(Integer)sweetChili_num.getValue(),(Integer)vegana_num.getValue(),(Integer)bbq_num.getValue(),(Integer)toffee_num.getValue(),(Integer)callejera_num.getValue(),(Integer)cesar_num.getValue(),(Integer)salsaAlitas_num.getValue(),(Integer)ensCol_num.getValue(),(Integer)pibil_num.getValue(),(Integer)entrecot_num.getValue(),(Integer)salchichas_num.getValue(),(Integer)oreo_num.getValue(),(Integer)tartaQueso_num.getValue(),(Integer)sacher_num.getValue(),(Integer)zanahoria_num.getValue()};
+					Pedido nuevo=new Pedido(usuario,ventana.getConexion(),cantidad);
+					nuevo.nuevoPedido();
+					btnEnviar.setText("Tu pedido ha sido enviado!");
+					btnEnviar.setEnabled(false);
+				}
+	
+			}
+		});
+
+	}
+	
+	/*
+	 * Aqui iniciamos todos los componentes de este panel
+	 */
+	public void initComponents() {
 		setBackground(Color.BLACK);
-		this.setVisible(true);
 		this.setSize(980,700);
 		ventana.setSize(this.getSize());
 		setLayout(new BorderLayout(0, 0));
@@ -91,7 +163,7 @@ public class PanelPedido extends JPanel{
 		gbc_aguja.gridy = 1;
 		panel.add(aguja, gbc_aguja);
 		
-		JSpinner aguja_num = new JSpinner();
+		aguja_num = new JSpinner();
 		aguja_num.setModel(new SpinnerNumberModel(new Integer(0), new Integer(0), null, new Integer(1)));
 		aguja_num.setFont(new Font("Tahoma", Font.PLAIN, 27));
 		GridBagConstraints gbc_aguja_num = new GridBagConstraints();
@@ -112,7 +184,7 @@ public class PanelPedido extends JPanel{
 		gbc_salteado.gridy = 1;
 		panel.add(salteado, gbc_salteado);
 		
-		JSpinner salteado_num = new JSpinner();
+		salteado_num = new JSpinner();
 		salteado_num.setModel(new SpinnerNumberModel(new Integer(0), new Integer(0), null, new Integer(1)));
 		salteado_num.setFont(new Font("Tahoma", Font.PLAIN, 27));
 		GridBagConstraints gbc_salteado_num = new GridBagConstraints();
@@ -132,7 +204,7 @@ public class PanelPedido extends JPanel{
 		gbc_angus.gridy = 2;
 		panel.add(angus, gbc_angus);
 		
-		JSpinner angus_num = new JSpinner();
+		angus_num = new JSpinner();
 		angus_num.setModel(new SpinnerNumberModel(new Integer(0), new Integer(0), null, new Integer(1)));
 		angus_num.setFont(new Font("Tahoma", Font.PLAIN, 27));
 		GridBagConstraints gbc_angus_num = new GridBagConstraints();
@@ -152,7 +224,7 @@ public class PanelPedido extends JPanel{
 		gbc_ketchup.gridy = 2;
 		panel.add(ketchup, gbc_ketchup);
 		
-		JSpinner ketchup_num = new JSpinner();
+		ketchup_num = new JSpinner();
 		ketchup_num.setModel(new SpinnerNumberModel(new Integer(0), new Integer(0), null, new Integer(1)));
 		ketchup_num.setFont(new Font("Tahoma", Font.PLAIN, 27));
 		GridBagConstraints gbc_ketchup_num = new GridBagConstraints();
@@ -172,7 +244,7 @@ public class PanelPedido extends JPanel{
 		gbc_entrana.gridy = 3;
 		panel.add(entrana, gbc_entrana);
 		
-		JSpinner entrana_num = new JSpinner();
+		entrana_num = new JSpinner();
 		entrana_num.setModel(new SpinnerNumberModel(new Integer(0), new Integer(0), null, new Integer(1)));
 		entrana_num.setFont(new Font("Tahoma", Font.PLAIN, 27));
 		GridBagConstraints gbc_entrana_num = new GridBagConstraints();
@@ -192,7 +264,7 @@ public class PanelPedido extends JPanel{
 		gbc_lacalle.gridy = 3;
 		panel.add(lacalle, gbc_lacalle);
 		
-		JSpinner lacalle_num = new JSpinner();
+		lacalle_num = new JSpinner();
 		lacalle_num.setModel(new SpinnerNumberModel(new Integer(0), new Integer(0), null, new Integer(1)));
 		lacalle_num.setFont(new Font("Tahoma", Font.PLAIN, 27));
 		GridBagConstraints gbc_lacalle_num = new GridBagConstraints();
@@ -212,7 +284,7 @@ public class PanelPedido extends JPanel{
 		gbc_garbanzos.gridy = 4;
 		panel.add(garbanzos, gbc_garbanzos);
 		
-		JSpinner garbanzos_num = new JSpinner();
+		garbanzos_num = new JSpinner();
 		garbanzos_num.setModel(new SpinnerNumberModel(new Integer(0), new Integer(0), null, new Integer(1)));
 		garbanzos_num.setFont(new Font("Tahoma", Font.PLAIN, 27));
 		GridBagConstraints gbc_garbanzos_num = new GridBagConstraints();
@@ -232,7 +304,7 @@ public class PanelPedido extends JPanel{
 		gbc_chimichurri.gridy = 4;
 		panel.add(chimichurri, gbc_chimichurri);
 		
-		JSpinner chimichurri_num = new JSpinner();
+		chimichurri_num = new JSpinner();
 		chimichurri_num.setModel(new SpinnerNumberModel(new Integer(0), new Integer(0), null, new Integer(1)));
 		chimichurri_num.setFont(new Font("Tahoma", Font.PLAIN, 27));
 		GridBagConstraints gbc_chimichurri_num = new GridBagConstraints();
@@ -252,7 +324,7 @@ public class PanelPedido extends JPanel{
 		gbc_lentejas.gridy = 5;
 		panel.add(lentejas, gbc_lentejas);
 		
-		JSpinner lentejas_num = new JSpinner();
+		lentejas_num = new JSpinner();
 		lentejas_num.setModel(new SpinnerNumberModel(new Integer(0), new Integer(0), null, new Integer(1)));
 		lentejas_num.setFont(new Font("Tahoma", Font.PLAIN, 27));
 		GridBagConstraints gbc_lentejas_num = new GridBagConstraints();
@@ -272,7 +344,7 @@ public class PanelPedido extends JPanel{
 		gbc_trufa.gridy = 5;
 		panel.add(trufa, gbc_trufa);
 		
-		JSpinner trufa_num = new JSpinner();
+		trufa_num = new JSpinner();
 		trufa_num.setModel(new SpinnerNumberModel(new Integer(0), new Integer(0), null, new Integer(1)));
 		trufa_num.setFont(new Font("Tahoma", Font.PLAIN, 27));
 		GridBagConstraints gbc_trufa_num = new GridBagConstraints();
@@ -292,7 +364,7 @@ public class PanelPedido extends JPanel{
 		gbc_vacio.gridy = 6;
 		panel.add(vacio, gbc_vacio);
 		
-		JSpinner vacio_num = new JSpinner();
+		vacio_num = new JSpinner();
 		vacio_num.setModel(new SpinnerNumberModel(new Integer(0), new Integer(0), null, new Integer(1)));
 		vacio_num.setFont(new Font("Tahoma", Font.PLAIN, 27));
 		GridBagConstraints gbc_vacio_num = new GridBagConstraints();
@@ -312,7 +384,7 @@ public class PanelPedido extends JPanel{
 		gbc_sweetChili.gridy = 6;
 		panel.add(sweetChili, gbc_sweetChili);
 		
-		JSpinner sweetChili_num = new JSpinner();
+		sweetChili_num = new JSpinner();
 		sweetChili_num.setModel(new SpinnerNumberModel(new Integer(0), new Integer(0), null, new Integer(1)));
 		sweetChili_num.setFont(new Font("Tahoma", Font.PLAIN, 27));
 		GridBagConstraints gbc_sweetChili_num = new GridBagConstraints();
@@ -332,7 +404,7 @@ public class PanelPedido extends JPanel{
 		gbc_doble.gridy = 7;
 		panel.add(doble, gbc_doble);
 		
-		JSpinner doble_num = new JSpinner();
+		doble_num = new JSpinner();
 		doble_num.setModel(new SpinnerNumberModel(new Integer(0), new Integer(0), null, new Integer(1)));
 		doble_num.setFont(new Font("Tahoma", Font.PLAIN, 27));
 		GridBagConstraints gbc_doble_num = new GridBagConstraints();
@@ -352,7 +424,7 @@ public class PanelPedido extends JPanel{
 		gbc_vegana.gridy = 7;
 		panel.add(vegana, gbc_vegana);
 		
-		JSpinner vegana_num = new JSpinner();
+		vegana_num = new JSpinner();
 		vegana_num.setModel(new SpinnerNumberModel(new Integer(0), new Integer(0), null, new Integer(1)));
 		vegana_num.setFont(new Font("Tahoma", Font.PLAIN, 27));
 		GridBagConstraints gbc_vegana_num = new GridBagConstraints();
@@ -382,7 +454,7 @@ public class PanelPedido extends JPanel{
 		gbc_bbq.gridy = 8;
 		panel.add(bbq, gbc_bbq);
 		
-		JSpinner bbq_num = new JSpinner();
+		bbq_num = new JSpinner();
 		bbq_num.setModel(new SpinnerNumberModel(new Integer(0), new Integer(0), null, new Integer(1)));
 		bbq_num.setFont(new Font("Tahoma", Font.PLAIN, 27));
 		GridBagConstraints gbc_bbq_num = new GridBagConstraints();
@@ -402,7 +474,7 @@ public class PanelPedido extends JPanel{
 		gbc_alitas.gridy = 9;
 		panel.add(alitas, gbc_alitas);
 		
-		JSpinner alitas_num = new JSpinner();
+		alitas_num = new JSpinner();
 		alitas_num.setModel(new SpinnerNumberModel(new Integer(0), new Integer(0), null, new Integer(1)));
 		alitas_num.setFont(new Font("Tahoma", Font.PLAIN, 27));
 		GridBagConstraints gbc_alitas_num = new GridBagConstraints();
@@ -422,7 +494,7 @@ public class PanelPedido extends JPanel{
 		gbc_toffee.gridy = 9;
 		panel.add(toffee, gbc_toffee);
 		
-		JSpinner toffee_num = new JSpinner();
+		toffee_num = new JSpinner();
 		toffee_num.setModel(new SpinnerNumberModel(new Integer(0), new Integer(0), null, new Integer(1)));
 		toffee_num.setFont(new Font("Tahoma", Font.PLAIN, 27));
 		GridBagConstraints gbc_toffee_num = new GridBagConstraints();
@@ -442,7 +514,7 @@ public class PanelPedido extends JPanel{
 		gbc_bacon.gridy = 10;
 		panel.add(bacon, gbc_bacon);
 		
-		JSpinner bacon_num = new JSpinner();
+		bacon_num = new JSpinner();
 		bacon_num.setModel(new SpinnerNumberModel(new Integer(0), new Integer(0), null, new Integer(1)));
 		bacon_num.setFont(new Font("Tahoma", Font.PLAIN, 27));
 		GridBagConstraints gbc_bacon_num = new GridBagConstraints();
@@ -462,7 +534,7 @@ public class PanelPedido extends JPanel{
 		gbc_callejera.gridy = 10;
 		panel.add(callejera, gbc_callejera);
 		
-		JSpinner callejera_num = new JSpinner();
+		callejera_num = new JSpinner();
 		callejera_num.setModel(new SpinnerNumberModel(new Integer(0), new Integer(0), null, new Integer(1)));
 		callejera_num.setFont(new Font("Tahoma", Font.PLAIN, 27));
 		GridBagConstraints gbc_callejera_num = new GridBagConstraints();
@@ -482,7 +554,7 @@ public class PanelPedido extends JPanel{
 		gbc_cebollaVino.gridy = 11;
 		panel.add(cebollaVino, gbc_cebollaVino);
 		
-		JSpinner cebolla_num = new JSpinner();
+		cebolla_num = new JSpinner();
 		cebolla_num.setModel(new SpinnerNumberModel(new Integer(0), new Integer(0), null, new Integer(1)));
 		cebolla_num.setFont(new Font("Tahoma", Font.PLAIN, 27));
 		GridBagConstraints gbc_cebolla_num = new GridBagConstraints();
@@ -502,7 +574,7 @@ public class PanelPedido extends JPanel{
 		gbc_cesar.gridy = 11;
 		panel.add(cesar, gbc_cesar);
 		
-		JSpinner cesar_num = new JSpinner();
+		cesar_num = new JSpinner();
 		cesar_num.setModel(new SpinnerNumberModel(new Integer(0), new Integer(0), null, new Integer(1)));
 		cesar_num.setFont(new Font("Tahoma", Font.PLAIN, 27));
 		GridBagConstraints gbc_cesar_num = new GridBagConstraints();
@@ -522,7 +594,7 @@ public class PanelPedido extends JPanel{
 		gbc_portobello.gridy = 12;
 		panel.add(portobello, gbc_portobello);
 		
-		JSpinner portobello_num = new JSpinner();
+		portobello_num = new JSpinner();
 		portobello_num.setModel(new SpinnerNumberModel(new Integer(0), new Integer(0), null, new Integer(1)));
 		portobello_num.setFont(new Font("Tahoma", Font.PLAIN, 27));
 		GridBagConstraints gbc_portobello_num = new GridBagConstraints();
@@ -542,7 +614,7 @@ public class PanelPedido extends JPanel{
 		gbc_salsaAlitas.gridy = 12;
 		panel.add(salsaAlitas, gbc_salsaAlitas);
 		
-		JSpinner salsaAlitas_num = new JSpinner();
+		salsaAlitas_num = new JSpinner();
 		salsaAlitas_num.setModel(new SpinnerNumberModel(new Integer(0), new Integer(0), null, new Integer(1)));
 		salsaAlitas_num.setFont(new Font("Tahoma", Font.PLAIN, 27));
 		GridBagConstraints gbc_salsaAlitas_num = new GridBagConstraints();
@@ -562,7 +634,7 @@ public class PanelPedido extends JPanel{
 		gbc_costillas.gridy = 13;
 		panel.add(costillas, gbc_costillas);
 		
-		JSpinner costillas_num = new JSpinner();
+		costillas_num = new JSpinner();
 		costillas_num.setModel(new SpinnerNumberModel(new Integer(0), new Integer(0), null, new Integer(1)));
 		costillas_num.setFont(new Font("Tahoma", Font.PLAIN, 27));
 		GridBagConstraints gbc_costillas_num = new GridBagConstraints();
@@ -582,7 +654,7 @@ public class PanelPedido extends JPanel{
 		gbc_ensCol.gridy = 13;
 		panel.add(ensCol, gbc_ensCol);
 		
-		JSpinner ensCol_num = new JSpinner();
+		ensCol_num = new JSpinner();
 		ensCol_num.setModel(new SpinnerNumberModel(new Integer(0), new Integer(0), null, new Integer(1)));
 		ensCol_num.setFont(new Font("Tahoma", Font.PLAIN, 27));
 		GridBagConstraints gbc_ensCol_num = new GridBagConstraints();
@@ -602,7 +674,7 @@ public class PanelPedido extends JPanel{
 		gbc_brocheta.gridy = 14;
 		panel.add(brocheta, gbc_brocheta);
 		
-		JSpinner brocheta_num = new JSpinner();
+		brocheta_num = new JSpinner();
 		brocheta_num.setModel(new SpinnerNumberModel(new Integer(0), new Integer(0), null, new Integer(1)));
 		brocheta_num.setFont(new Font("Tahoma", Font.PLAIN, 27));
 		GridBagConstraints gbc_brocheta_num = new GridBagConstraints();
@@ -632,7 +704,7 @@ public class PanelPedido extends JPanel{
 		gbc_fingers.gridy = 15;
 		panel.add(fingers, gbc_fingers);
 		
-		JSpinner fingers_num = new JSpinner();
+		fingers_num = new JSpinner();
 		fingers_num.setModel(new SpinnerNumberModel(new Integer(0), new Integer(0), null, new Integer(1)));
 		fingers_num.setFont(new Font("Tahoma", Font.PLAIN, 27));
 		GridBagConstraints gbc_fingers_num = new GridBagConstraints();
@@ -652,7 +724,7 @@ public class PanelPedido extends JPanel{
 		gbc_pibil.gridy = 15;
 		panel.add(pibil, gbc_pibil);
 		
-		JSpinner pibil_num = new JSpinner();
+		pibil_num = new JSpinner();
 		pibil_num.setModel(new SpinnerNumberModel(new Integer(0), new Integer(0), null, new Integer(1)));
 		pibil_num.setFont(new Font("Tahoma", Font.PLAIN, 27));
 		GridBagConstraints gbc_pibil_num = new GridBagConstraints();
@@ -672,7 +744,7 @@ public class PanelPedido extends JPanel{
 		gbc_pimiento.gridy = 16;
 		panel.add(pimiento, gbc_pimiento);
 		
-		JSpinner pimiento_num = new JSpinner();
+		pimiento_num = new JSpinner();
 		pimiento_num.setModel(new SpinnerNumberModel(new Integer(0), new Integer(0), null, new Integer(1)));
 		pimiento_num.setFont(new Font("Tahoma", Font.PLAIN, 27));
 		GridBagConstraints gbc_pimiento_num = new GridBagConstraints();
@@ -692,7 +764,7 @@ public class PanelPedido extends JPanel{
 		gbc_entrecot.gridy = 16;
 		panel.add(entrecot, gbc_entrecot);
 		
-		JSpinner entrecot_num = new JSpinner();
+		entrecot_num = new JSpinner();
 		entrecot_num.setModel(new SpinnerNumberModel(new Integer(0), new Integer(0), null, new Integer(1)));
 		entrecot_num.setFont(new Font("Tahoma", Font.PLAIN, 27));
 		GridBagConstraints gbc_entrecot_num = new GridBagConstraints();
@@ -712,7 +784,7 @@ public class PanelPedido extends JPanel{
 		gbc_pollo.gridy = 17;
 		panel.add(pollo, gbc_pollo);
 		
-		JSpinner pollo_num = new JSpinner();
+		pollo_num = new JSpinner();
 		pollo_num.setFont(new Font("Tahoma", Font.PLAIN, 27));
 		pollo_num.setModel(new SpinnerNumberModel(new Integer(0), new Integer(0), null, new Integer(1)));
 		pollo_num.setEnabled(true);
@@ -733,7 +805,7 @@ public class PanelPedido extends JPanel{
 		gbc_salchichas.gridy = 17;
 		panel.add(salchichas, gbc_salchichas);
 		
-		JSpinner salchichas_num = new JSpinner();
+		salchichas_num = new JSpinner();
 		salchichas_num.setFont(new Font("Tahoma", Font.PLAIN, 27));
 		salchichas_num.setModel(new SpinnerNumberModel(new Integer(0), new Integer(0), null, new Integer(1)));
 		GridBagConstraints gbc_salchichas_num = new GridBagConstraints();
@@ -753,7 +825,7 @@ public class PanelPedido extends JPanel{
 		gbc_calambrito.gridy = 18;
 		panel.add(calambrito, gbc_calambrito);
 		
-		JSpinner calambrito_num = new JSpinner();
+		calambrito_num = new JSpinner();
 		calambrito_num.setFont(new Font("Tahoma", Font.PLAIN, 27));
 		calambrito_num.setModel(new SpinnerNumberModel(new Integer(0), new Integer(0), null, new Integer(1)));
 		GridBagConstraints gbc_calambrito_num = new GridBagConstraints();
@@ -782,7 +854,7 @@ public class PanelPedido extends JPanel{
 		gbc_oreo.gridy = 19;
 		panel.add(oreo, gbc_oreo);
 		
-		JSpinner oreo_num = new JSpinner();
+		oreo_num = new JSpinner();
 		oreo_num.setFont(new Font("Tahoma", Font.PLAIN, 27));
 		oreo_num.setModel(new SpinnerNumberModel(new Integer(0), new Integer(0), null, new Integer(1)));
 		GridBagConstraints gbc_oreo_num = new GridBagConstraints();
@@ -805,7 +877,7 @@ public class PanelPedido extends JPanel{
 		gbc_tartaQueso.gridy = 20;
 		panel.add(tartaQueso, gbc_tartaQueso);
 		
-		JSpinner tartaQueso_num = new JSpinner();
+		tartaQueso_num = new JSpinner();
 		tartaQueso_num.setFont(new Font("Tahoma", Font.PLAIN, 27));
 		tartaQueso_num.setModel(new SpinnerNumberModel(new Integer(0), new Integer(0), null, new Integer(1)));
 		GridBagConstraints gbc_tartaQueso_num = new GridBagConstraints();
@@ -825,7 +897,7 @@ public class PanelPedido extends JPanel{
 		gbc_sacher.gridy = 21;
 		panel.add(sacher, gbc_sacher);
 		
-		JSpinner sacher_num = new JSpinner();
+		sacher_num = new JSpinner();
 		sacher_num.setFont(new Font("Tahoma", Font.PLAIN, 27));
 		sacher_num.setModel(new SpinnerNumberModel(new Integer(0), new Integer(0), null, new Integer(1)));
 		GridBagConstraints gbc_sacher_num = new GridBagConstraints();
@@ -845,7 +917,7 @@ public class PanelPedido extends JPanel{
 		gbc_zanahoria.gridy = 22;
 		panel.add(zanahoria, gbc_zanahoria);
 		
-		JSpinner zanahoria_num = new JSpinner();
+		zanahoria_num = new JSpinner();
 		zanahoria_num.setFont(new Font("Tahoma", Font.PLAIN, 27));
 		zanahoria_num.setModel(new SpinnerNumberModel(new Integer(0), new Integer(0), null, new Integer(1)));
 		GridBagConstraints gbc_zanahoria_num = new GridBagConstraints();
@@ -854,7 +926,7 @@ public class PanelPedido extends JPanel{
 		gbc_zanahoria_num.gridy = 22;
 		panel.add(zanahoria_num, gbc_zanahoria_num);
 		
-		JButton btnEnviar = new JButton("Enviar pedido");
+		btnEnviar = new JButton("Enviar pedido");
 		btnEnviar.setFont(new Font("SansSerif", Font.BOLD, 18));
 		GridBagConstraints gbc_btnEnviar = new GridBagConstraints();
 		gbc_btnEnviar.gridheight = 1;
@@ -864,69 +936,8 @@ public class PanelPedido extends JPanel{
 		gbc_btnEnviar.gridx = 0;
 		gbc_btnEnviar.gridy = 24;
 		panel.add(btnEnviar, gbc_btnEnviar);
-		
-		
-		boolean[] pulsado= {false};
-		btnEnviar.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				if(pulsado[0]==false) {
-					btnEnviar.setText("Pulsa de nuevo para enviar el pedido");
-					pulsado[0]=true;
-				}else {
-					int []cantidad= {(Integer)aguja_num.getValue(),(Integer)angus_num.getValue(),(Integer)entrana_num.getValue(),(Integer)garbanzos_num.getValue(),(Integer)lentejas_num.getValue(),(Integer)vacio_num.getValue(),(Integer)doble_num.getValue(),(Integer)alitas_num.getValue(),(Integer)bacon_num.getValue(),(Integer)cebolla_num.getValue(),(Integer)portobello_num.getValue(),(Integer)costillas_num.getValue(),(Integer)brocheta_num.getValue(),(Integer)fingers_num.getValue(),(Integer)pimiento_num.getValue(),(Integer)pollo_num.getValue(),(Integer)calambrito_num.getValue(),(Integer)salteado_num.getValue(),(Integer)ketchup_num.getValue(),(Integer)lacalle_num.getValue(),(Integer)chimichurri_num.getValue(),(Integer)trufa_num.getValue(),(Integer)sweetChili_num.getValue(),(Integer)vegana_num.getValue(),(Integer)bbq_num.getValue(),(Integer)toffee_num.getValue(),(Integer)callejera_num.getValue(),(Integer)cesar_num.getValue(),(Integer)salsaAlitas_num.getValue(),(Integer)ensCol_num.getValue(),(Integer)pibil_num.getValue(),(Integer)entrecot_num.getValue(),(Integer)salchichas_num.getValue(),(Integer)oreo_num.getValue(),(Integer)tartaQueso_num.getValue(),(Integer)sacher_num.getValue(),(Integer)zanahoria_num.getValue()};
-					Pedido nuevo=new Pedido(usuario,ventana.getConexion(),cantidad);
-					nuevo.nuevoPedido();
-					btnEnviar.setText("Tu pedido ha sido enviado!");
-					btnEnviar.setEnabled(false);
-				}
-				
-				
-
-				
-			}
-		});
-		
-		
-		/*try {
-			
-            
-            
-            Statement smt=conexion.createStatement();
-            ResultSet resultado=smt.executeQuery("select id from pedido where Usuario_Restaurante_codigoRestaurante='CENTRO';");
-            Statement smt2=conexion.createStatement();
-            ResultSet resultado2;
-            String id="";
-            while(resultado.next()){
-                id=resultado.getString("id");
-               resultado2=smt2.executeQuery("select producto.*,productospedidos.*,pedido.*\n" +
-                "from productospedidos\n" +
-                " join producto on producto.id=productospedidos.producto_id\n" +
-                " join pedido on productospedidos.Pedido_id=pedido.id\n" +
-                "where pedido.id='"+id+"';"); 
-               
-               while(resultado2.next()){
-                   String nombre=resultado2.getString("nombre");
-                   String precio=resultado2.getString("precio");
-                   String cantidadUnidad=resultado2.getString("cantidadPorUnidad");
-                   String unidad=resultado2.getString("unidadDeMedida");
-                   String cantidad=resultado2.getString("cantidad");
-                   String fecha=resultado2.getString("fecha");
-                   
-                 
-                   
-               }
-            }
-            
-            
-            
-         
-    
-} catch (SQLException ex) {
-    Logger.getLogger(Administrador.class.getName()).log(Level.SEVERE, null, ex);
-}
-*/
-		
 	}
-
 }
+
+
 
