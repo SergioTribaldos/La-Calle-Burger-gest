@@ -30,6 +30,7 @@ import java.awt.GridBagConstraints;
 import java.awt.Insets;
 import java.awt.Dimension;
 import javax.swing.SwingConstants;
+import javax.swing.JList;
 
 public class PanelLoginAdministrador extends JPanel {
 	JButton siguiente;
@@ -118,6 +119,4 @@ public class PanelLoginAdministrador extends JPanel {
 	
 		
 	}
-	
-
 }

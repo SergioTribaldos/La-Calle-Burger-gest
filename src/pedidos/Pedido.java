@@ -46,6 +46,7 @@ public class Pedido {
     private Timestamp fechaPedido;
     private Connection conexion;
     private String [] lote;
+    private byte facturado;
 
  
 
@@ -58,20 +59,34 @@ public class Pedido {
 
     }
     
-    public Pedido(short id,Timestamp fechaPedido,ArrayList<Producto> listaProductos,int[] cantidad,Usuario usuario) {
+    public Pedido(short id,Timestamp fechaPedido,ArrayList<Producto> listaProductos,int[] cantidad,Usuario usuario,byte facturado) {
     	this.id = id;
     	this.fechaPedido = fechaPedido;
     	this.usuario = usuario;
     	this.listaProductos = listaProductos;
     	this.cantidad = cantidad;
     	this.usuario = usuario;	
+    	this.facturado = facturado;
     }
     
+    public Pedido(ArrayList<Producto> listaProductos,int[] cantidad) {
+		this.listaProductos=listaProductos;
+		this.cantidad = cantidad;
+	}
+    
+    
     
     
 
+    public byte getFacturado() {
+		return facturado;
+	}
 
-    public short getId() {
+	public void setFacturado(byte facturado) {
+		this.facturado = facturado;
+	}
+
+	public short getId() {
 		return id;
 	}
 

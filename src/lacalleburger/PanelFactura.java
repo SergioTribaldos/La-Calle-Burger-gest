@@ -9,7 +9,6 @@ import javax.swing.SpinnerNumberModel;
 import javax.swing.border.EmptyBorder;
 
 import pedidos.Pedido;
-import pedidos.Pedido_info;
 import restaurantes.Restaurante;
 import usuarios.Administrador;
 import usuarios.Usuario;
