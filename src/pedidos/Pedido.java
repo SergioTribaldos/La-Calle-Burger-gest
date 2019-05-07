@@ -47,6 +47,7 @@ public class Pedido {
     private Connection conexion;
     private String [] lote;
     private byte facturado;
+    double sumaTotalSinIva;
 
  
 
@@ -198,7 +199,7 @@ public class Pedido {
 		}else {
 		  DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH_mm");
        	  fechaArchivo = dateFormat.format(this.fechaPedido);
-       	  nombreRestaurante=this.getUsuario().getRestaurante().getNombre();
+       	  nombreRestaurante=this.getUsuario().getRestaurante().getCodigoRestaurante();
 		}
 				
         FileWriter log=null;
@@ -257,6 +258,7 @@ public class Pedido {
  
         } 
             log.flush();
+            log.close();
             
         } catch (IOException ex) {
             Logger.getLogger(Pedido.class.getName()).log(Level.SEVERE, null, ex);
@@ -281,7 +283,7 @@ public class Pedido {
         	
         	DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH_mm");
            	fechaArchivo = dateFormat.format(this.fechaPedido);
-           	nombreRestaurante=this.getUsuario().getRestaurante().getNombre();
+           	nombreRestaurante=this.getUsuario().getRestaurante().getCodigoRestaurante();
            
             File logFile=new File("ALBARAN "+nombreRestaurante+" "+fechaArchivo+".html");
             log = new FileWriter(logFile.getAbsoluteFile(),false);
@@ -330,7 +332,7 @@ public class Pedido {
             		"  </tr>\r\n" + 
             		"  <tr>\r\n" + 
             		"    <td class=\"tg-3pun\">PARA:</td>\r\n" + 
-            		"    <td class=\"tg-xldj\">"+this.getUsuario().getRestaurante().getNombre()+"     "+this.getUsuario().getRestaurante().getCif()+"</td>\r\n" + 
+            		"    <td class=\"tg-xldj\">"+this.getUsuario().getRestaurante().getCodigoRestaurante()+"     "+this.getUsuario().getRestaurante().getCif()+"</td>\r\n" + 
             		"    <td class=\"tg-3pun\">FECHA:</td>\r\n" + 
             		"    <td class=\"tg-0pky\" colspan=\"2\">"+fechaArchivo+" </td>\r\n" + 
             		"  </tr>\r\n" + 
@@ -364,7 +366,7 @@ public class Pedido {
                     log.append("<td class=\"celda\">"+sumaCantidadYProducto[i]+"</td>");
             	}
         } 
-            double sumaTotalSinIva=DoubleStream.of(sumaCantidadYProducto).sum();
+            sumaTotalSinIva=DoubleStream.of(sumaCantidadYProducto).sum();
             
             log.append("  <tr>\r\n" + 
             		"    <td class=\"tg-0pky\" colspan=\"4\">EXTRAS/ABONOS/DESCUENTOS</td>\r\n" + 
@@ -393,6 +395,7 @@ public class Pedido {
             		"  </body>\r\n" + 
             		"</html>");
             log.flush();
+            log.close();
             
         } catch (IOException ex) {
             Logger.getLogger(Pedido.class.getName()).log(Level.SEVERE, null, ex);
@@ -407,7 +410,7 @@ public class Pedido {
 		
 	}
 	
-	public void actualizaPedidoConLotes(Connection conexion) {
+	public void actualizaPedidoConLotesYPrecioTotal(Connection conexion) {
 		this.conexion = conexion;
 		try {
 			PreparedStatement smt=this.getConexion().prepareStatement("update productospedidos set lote=(?) where pedido_id="+this.id+" and producto_id=?;");
@@ -421,6 +424,9 @@ public class Pedido {
 				smt.executeBatch();
 				
 			smt=this.getConexion().prepareStatement("update pedido set facturado=true where id="+this.id+";");
+			smt.executeUpdate();
+			
+			smt=this.getConexion().prepareStatement("update pedido set totalSinIva="+sumaTotalSinIva+" where id="+this.id+";");
 			smt.executeUpdate();
 			
 			smt.close();

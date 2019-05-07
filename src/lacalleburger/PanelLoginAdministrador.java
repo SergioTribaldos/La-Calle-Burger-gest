@@ -80,11 +80,11 @@ public class PanelLoginAdministrador extends JPanel {
 		add(siguiente);
 		
 		
-		JLabel lblNewLabel = new JLabel("New label");
-		lblNewLabel.setIcon(new ImageIcon(PanelLoginUsuario.class.getResource("/descarga.png")));
+		JLabel logoEmpresa = new JLabel("New label");
+		logoEmpresa.setIcon(new ImageIcon(PanelLoginUsuario.class.getResource("/descarga.png")));
 		
-		lblNewLabel.setBounds(23, 6, 226, 192);
-		add(lblNewLabel);
+		logoEmpresa.setBounds(0, 0, 226, 192);
+		add(logoEmpresa);
 		
 		JLabel lblPanelDeAdministrador = new JLabel("Panel de administrador");
 		lblPanelDeAdministrador.setHorizontalAlignment(SwingConstants.CENTER);

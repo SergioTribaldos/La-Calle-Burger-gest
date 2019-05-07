@@ -1,5 +1,8 @@
 package restaurantes;
 
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -8,17 +11,10 @@ package restaurantes;
 
 
 import java.util.ArrayList;
+
+import excepciones.RestauranteException;
+import lacalleburger.Ventana;
 import pedidos.Pedido;
-import static restaurantes.Restaurante.codRestaurante.AMERICAS;
-import static restaurantes.Restaurante.codRestaurante.CENTRO;
-import static restaurantes.Restaurante.codRestaurante.FUENGIROLA;
-import static restaurantes.Restaurante.codRestaurante.GAMARRA;
-import static restaurantes.Restaurante.codRestaurante.MARBELLA;
-import static restaurantes.Restaurante.codRestaurante.PARQUE_OESTE;
-import static restaurantes.Restaurante.codRestaurante.PEDREGALEJO;
-import static restaurantes.Restaurante.codRestaurante.PLAZA_MAYOR;
-import static restaurantes.Restaurante.codRestaurante.SAN_PEDRO;
-import static restaurantes.Restaurante.codRestaurante.TEATINOS;
 import usuarios.Usuario;
 
 /**
@@ -26,100 +22,118 @@ import usuarios.Usuario;
  * @author Sergio
  */
 public class Restaurante {
-    private final String cif;
-    private final String nombre;
-    private final String direccion;
-    private final String telefono;
-    private codRestaurante codigoRestaurante;
+    private String cif;
+    private String direccion;
+    private String telefono;
+    private String codigoRestaurante;
 
     
 
-    public Restaurante(String cif, String nombre, String direccion, String telefono,String codigo) {
-        this.cif = cif;
-        this.nombre = nombre;
-        this.direccion = direccion;
-        this.telefono = telefono;
-
+    public Restaurante(String cif, String direccion, String telefono,String codigo) throws RestauranteException {
+        setCif(cif);
+        setDireccion(direccion);
+        setTelefono(telefono);
         setCodigoRestaurante(codigo);
-    }
-    
-    public enum codRestaurante{
-        CENTRO,
-        TEATINOS,
-        FUENGIROLA,
-        PEDREGALEJO,
-        AMERICAS,
-        PLAZA_MAYOR,
-        PARQUE_OESTE,
-        GAMARRA,
-        SAN_PEDRO,
-        MARBELLA       
+
     }
 
-    public String getCif() {
-        return cif;
-    }
 
-    public String getNombre() {
-        return nombre;
-    }
 
-    public String getDireccion() {
-        return direccion;
-    }
+	public String getCif() {
+		return cif;
+	}
 
-    public String getTelefono() {
-        return telefono;
-    }
 
-    
-    public codRestaurante getCodigoRestaurante() {
-        return codigoRestaurante;
-    }
 
-    public void setCodigoRestaurante(String codigoRestaurante) {
-        switch(codigoRestaurante){
-            case "CENTRO":
-                this.codigoRestaurante = CENTRO;
-                break;
-            case "TEATINOS":
-                this.codigoRestaurante = TEATINOS;
-                break;
-            case "FUENGIROLA":
-                this.codigoRestaurante = FUENGIROLA;
-                break;
-            case "PEDREGALEJO":
-                this.codigoRestaurante = PEDREGALEJO;
-                break;
-            case "AMERICAS":
-                this.codigoRestaurante = AMERICAS;
-                break;
-            case "PLAZA_MAYOR":
-                this.codigoRestaurante = PLAZA_MAYOR;
-                break;
-            case "PARQUE_OESTE":
-                this.codigoRestaurante = PARQUE_OESTE;
-                break; 
-            case "GAMARRA":
-                this.codigoRestaurante = GAMARRA;
-                break;
-            case "SAN_PEDRO":
-                this.codigoRestaurante = SAN_PEDRO;
-                break;
-            case "MARBELLA":
-                this.codigoRestaurante = MARBELLA;
-                break;        
-        }
-    }
-    
-    
-    
-    
-    
-    
-    
-      
-    
-    
-    
+	public void setCif(String cif) throws RestauranteException {
+		if(cif.length()==0) {
+			throw new RestauranteException("El campo Cif no puede estar vacio");
+		}
+		
+		if(cif.length()>20) {
+			throw new RestauranteException("El Cif introducido no puede tener mas de 20 caracteres");
+		}
+		
+		this.cif=cif;
+	}
+
+
+
+	public String getDireccion() {
+		return direccion;
+	}
+
+
+
+	public void setDireccion(String direccion) throws RestauranteException {
+		if(direccion.length()==0) {
+			throw new RestauranteException("El campo dirección no puede estar vacio");
+		}
+		
+		if(cif.length()>20) {
+			throw new RestauranteException("La direccion introducida no puede tener mas de 150 caracteres");
+		}
+		
+		this.direccion=direccion;
+	}
+
+
+
+	public String getTelefono() {
+		return telefono;
+	}
+
+
+
+	public void setTelefono(String telefono) throws RestauranteException {
+		if(telefono.length()==0) {
+			throw new RestauranteException("El campo teléfono no puede estar vacio");
+		}
+
+		this.telefono=telefono;
+		
+		
+	}
+
+
+
+	public String getCodigoRestaurante() {
+		return codigoRestaurante;
+	}
+
+
+
+	public void setCodigoRestaurante(String codigoRestaurante) throws RestauranteException {
+		if(codigoRestaurante.length()==0) {
+			throw new RestauranteException("El campo Código de restaurante no puede estar vacio");
+		}
+		
+		for(int i=0;i<codigoRestaurante.length();i++) {
+			if(Character.isDigit(codigoRestaurante.charAt(i))) {
+				throw new RestauranteException("El campo Código de restaurante no puede contener numeros");
+			}
+		}
+
+		this.codigoRestaurante = codigoRestaurante.toUpperCase();
+	}
+	
+	public void insertarRestauranteEnBaseDeDatos(Ventana ventana) {
+		try {
+			PreparedStatement smt=ventana.getConexion().prepareStatement("insert into restaurante(cif,direccion,telefono,codigoRestaurante) values (?,?,?,?)");
+			smt.setString(1, this.cif);
+			smt.setString(2, this.direccion);
+			smt.setString(3, this.telefono);
+			smt.setString(4, this.codigoRestaurante);
+			
+			smt.executeUpdate();
+			smt.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
+
+
+
 }

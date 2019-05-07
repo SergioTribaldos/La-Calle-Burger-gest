@@ -98,7 +98,7 @@ public class PanelFactura extends JPanel{
 		gbl_panel.columnWeights = new double[]{1.0, 0.0, 0.0, 1.0, 0.0, 0.0};
 		gbl_panel.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 1.0};
 		panel.setLayout(gbl_panel);
-		JLabel lblNewLabel = new JLabel(pedido.getUsuario().getRestaurante().getNombre()+" "+pedido.getUsuario().getRestaurante().getDireccion()+" "+pedido.getUsuario().getRestaurante().getTelefono());
+		JLabel lblNewLabel = new JLabel(pedido.getUsuario().getRestaurante().getCodigoRestaurante()+" "+pedido.getUsuario().getRestaurante().getDireccion()+" "+pedido.getUsuario().getRestaurante().getTelefono());
 		lblNewLabel.setFont(new Font("SansSerif", Font.PLAIN, 23));
 		lblNewLabel.setForeground(Color.WHITE);
 		lblNewLabel.setBackground(Color.WHITE);

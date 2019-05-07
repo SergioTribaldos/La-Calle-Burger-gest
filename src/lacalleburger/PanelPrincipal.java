@@ -5,6 +5,7 @@ import java.awt.Color;
 import javax.swing.JLabel;
 import java.awt.Font;
 import javax.swing.SwingConstants;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import java.awt.event.ActionListener;
@@ -17,32 +18,29 @@ public class PanelPrincipal extends JPanel {
 		this.ventana = ventana;
 		setBackground(Color.BLACK);
 		setLayout(null);
-		this.setSize(500,500);
+		this.setSize(673,511);
 		
 		JLabel lblEligeComoTe = new JLabel("Elige como te quieres logear");
 		lblEligeComoTe.setHorizontalAlignment(SwingConstants.CENTER);
-		lblEligeComoTe.setFont(new Font("SansSerif", Font.BOLD, 24));
+		lblEligeComoTe.setFont(new Font("Segoe Print", Font.PLAIN, 24));
 		lblEligeComoTe.setForeground(Color.WHITE);
-		lblEligeComoTe.setBounds(130, 77, 442, 70);
+		lblEligeComoTe.setBounds(131, 180, 442, 70);
 		add(lblEligeComoTe);
 		
 		JButton usuario = new JButton("Usuario");
+		usuario.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		usuario.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				
-				ventana.cambiaPanel(new PanelLoginUsuario(ventana),PanelPrincipal.this);
-				
-				/*PanelLogin panelLogin=new PanelLogin(ventana);
-				ventana.setContentPane(panelLogin);
-				estePanel.setVisible(false);*/
-				
-				
+				ventana.cambiaPanel(new PanelLoginUsuario(ventana,PanelPrincipal.this),PanelPrincipal.this);
+							
 			}
 		});
-		usuario.setBounds(177, 211, 350, 77);
+		usuario.setBounds(178, 285, 350, 77);
 		add(usuario);
 		
 		JButton administrador = new JButton("Administrador");
+		administrador.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		administrador.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
@@ -54,8 +52,13 @@ public class PanelPrincipal extends JPanel {
 				
 			}
 		});
-		administrador.setBounds(177, 324, 349, 77);
+		administrador.setBounds(178, 373, 349, 77);
 		add(administrador);
+		
+		JLabel logoEmpresa = new JLabel("New label");
+		logoEmpresa.setIcon(new ImageIcon(PanelLoginUsuario.class.getResource("/descarga.png")));
+		logoEmpresa.setBounds(0, 0, 226, 192);
+		add(logoEmpresa);
 		
 	}
 }

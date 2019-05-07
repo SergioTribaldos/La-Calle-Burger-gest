@@ -50,13 +50,12 @@ public class Ventana extends JFrame{
 
 	}
 	
-	public Ventana(PanelFactura panelFactura,Connection conexion) {		
+	public Ventana(PanelFactura2 panelFactura,Connection conexion) {		
 		this.conexion = conexion;
 		setContentPane(panelFactura);
 		this.setVisible(true);
 		
-		setResizable(false);
-		//panelPrincipal=new PanelPrincipal(this);
+		setResizable(true);
 		this.setSize(950,861);
 		
 	}

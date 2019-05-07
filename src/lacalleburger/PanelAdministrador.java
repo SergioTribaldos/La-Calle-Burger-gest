@@ -11,8 +11,10 @@ import javax.swing.UIManager;
 import pedidos.Pedido;
 import producto.Producto;
 import restaurantes.Restaurante;
-import restaurantes.Restaurante.codRestaurante;
 import usuarios.Usuario;
+import componentes.CampoTexto;
+import componentes.JLista;
+import excepciones.RestauranteException;
 
 import javax.swing.JTabbedPane;
 import javax.swing.JLabel;
@@ -54,6 +56,9 @@ import java.awt.event.MouseEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.VetoableChangeListener;
+import javax.swing.SwingConstants;
+import java.awt.event.MouseMotionAdapter;
+
 
 public class PanelAdministrador extends JPanel{
 	DefaultListModel<Pedido> listModelObjeto;
@@ -62,11 +67,18 @@ public class PanelAdministrador extends JPanel{
 	JCalendar calendario;
 	Ventana ventana;
 	private JButton btnGenerarFactura;
-	private JList JListDePedidos;
+	private JList<Pedido> JListDePedidos;
 	private JButton btnGuardarPedidos;
 	private JTabbedPane tabbedPane;
 	JLabel etiquetaPedidoRealizado;
 	ListCellRenderer renderJList;
+	private CampoTexto campoCodigoRestaurante;
+	private CampoTexto campoDireccion;
+	private CampoTexto campoCif;
+	private CampoTexto campoTelefono;
+	private JButton botonAltaRestaurante;
+	private JLabel labelError;
+	JPanel panelDatosRestaurante;
 	
 
 	public PanelAdministrador(Ventana ventan) {
@@ -74,7 +86,7 @@ public class PanelAdministrador extends JPanel{
 		
 		initComponents();
 
-		listModelObjeto=new DefaultListModel();
+		listModelObjeto=new DefaultListModel<Pedido>();
 		productos=Producto.recogeInformacionProductos(ventana.getConexion());
 		renderJList = new JLista( listModelObjeto);
 		
@@ -91,11 +103,12 @@ public class PanelAdministrador extends JPanel{
 		
 		btnGenerarFactura.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				pasaObjetosSeleccionadosAUnArrayList(JListDePedidos);
-				
-				for(int f=0;f<listaObjetosSeleccionados.size();f++) {
-					PanelFactura nuevo=new PanelFactura(listaObjetosSeleccionados.get(f),ventana);
-					Ventana ventanaFactura=new Ventana(nuevo,ventana.getConexion());				
+				int[] indicesSeleccionados=JListDePedidos.getSelectedIndices();
+				for(int i=0;i<indicesSeleccionados.length;i++) {
+					PanelFactura2 nuevo=new PanelFactura2(listModelObjeto.get(indicesSeleccionados[i]),ventana);
+					Ventana ventanaFactura=new Ventana(nuevo,ventana.getConexion());
+					ventanaFactura.setExtendedState(ventana.getExtendedState() | ventana.MAXIMIZED_BOTH);
+					
 				}
 
 			}
@@ -105,9 +118,12 @@ public class PanelAdministrador extends JPanel{
 		JListDePedidos.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
-
-				int r=JListDePedidos.getSelectedIndex();
-				listModelObjeto.get(JListDePedidos.getSelectedIndex()) ;
+			
+			//Permite clickar la lista solo si hay pedidos
+			if(JListDePedidos.isEnabled()) {
+				listModelObjeto.get(JListDePedidos.getSelectedIndex());
+				
+				//Muestra si el pedido ha sido facturado o no, y habilita el boton de generar factura en caso de que si
 				if(listModelObjeto.get(JListDePedidos.getSelectedIndex()).getFacturado()==1 ) {
 					etiquetaPedidoRealizado.setText("El pedido ya ha sido facturado");
 					etiquetaPedidoRealizado.setForeground(Color.RED);
@@ -117,32 +133,61 @@ public class PanelAdministrador extends JPanel{
 					etiquetaPedidoRealizado.setForeground(new Color(35, 142, 67));
 					btnGenerarFactura.setEnabled(true);
 				}
+								
+							}				
 			}
 		});
 		
 		calendario.getDayChooser().addPropertyChangeListener(new PropertyChangeListener() {
 			public void propertyChange(PropertyChangeEvent evt) {
-				asignaPedidosAJList();
+				//Recoge los pedidos del dia seleccionado y los añade a la JList
+				try {
+					asignaPedidosAJList();
+				} catch (RestauranteException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		});
+		
+		botonAltaRestaurante.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				try {
+					Restaurante nuevo= new Restaurante(
+							campoCif.getText(),			
+							campoDireccion.getText(),			
+							campoTelefono.getText(),
+							campoCodigoRestaurante.getText()	
+							);
+					nuevo.insertarRestauranteEnBaseDeDatos(ventana);
+				} catch (RestauranteException e) {	
+					labelError.setText(e.getMessage());
+					e.printStackTrace();
+				}
+			}
+		});
+		
+		
+		panelDatosRestaurante.addMouseMotionListener(new MouseMotionAdapter() {
+			@Override
+			public void mouseMoved(MouseEvent arg0) {
+				try {
+					Thread.sleep(300);
+					labelError.setText("");
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
 			}
 		});
 		
 		
 		
-		
+
 	}
-	
-	public void pasaObjetosSeleccionadosAUnArrayList(JList list ) {
-		
-		int[] indicesSeleccionados=list.getSelectedIndices();
-		listaObjetosSeleccionados = new ArrayList<Pedido>();								
-		//listaObjetosSeleccionados.clear();
-		for(int i=0;i<indicesSeleccionados.length;i++) {
-			listaObjetosSeleccionados.add(listModelObjeto.get(indicesSeleccionados[i]));
-		}
-		
-	}
-	
-	private void asignaPedidosAJList() {
+
+	private void asignaPedidosAJList() throws RestauranteException {
 		
 		try {
 			etiquetaPedidoRealizado.setText("");
@@ -151,67 +196,52 @@ public class PanelAdministrador extends JPanel{
 			SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");			
 			String fechaElegida=format.format(calendario.getDate());
 
-			
-			Statement smt=ventana.getConexion().createStatement();
-			ResultSet res=smt.executeQuery("select DATE(fecha),Usuario_usuario,id,facturado from pedido where DATE(fecha)='"+fechaElegida+"' order by id desc;");
-			res.last();
-			int[] idPedidoSeleccionado=new int [res.getRow()];
-			res.beforeFirst();
-			int iterador2=0;
-			while(res.next()) {
-				idPedidoSeleccionado[iterador2]=res.getInt("id");
-				iterador2++;
-				
-			}
-	
-			if(idPedidoSeleccionado.length>0) {
-
 			Statement stm=ventana.getConexion().createStatement();
 			ResultSet resultadoPedidosCompleto=stm.executeQuery("select pedido.*,usuario.nombre,productospedidos.*,restaurante.*\r\n" + 
-					"from productospedidos \r\n" + 
-					"join pedido  on pedido.id=productospedidos.pedido_id\r\n" + 
-					"join usuario on pedido.Usuario_usuario=usuario.nombre\r\n" + 
-					"join restaurante on usuario.Restaurante_codigoRestaurante=restaurante.codigoRestaurante\r\n"
-					+ "  where pedido.id<="+idPedidoSeleccionado[0]+" and pedido.id>="+idPedidoSeleccionado[idPedidoSeleccionado.length-1]+" " + 
-					"order by pedido_id desc, producto_id asc;");
+					"					from productospedidos \r\n" + 
+					"					join pedido  on pedido.id=productospedidos.pedido_id\r\n" + 
+					"					join usuario on pedido.Usuario_usuario=usuario.nombre \r\n" + 
+					"					join restaurante on usuario.Restaurante_codigoRestaurante=restaurante.codigoRestaurante\r\n" + 
+					"					where DATE(pedido.fecha)='"+fechaElegida+"'\r\n" + 
+					"					order by pedido_id desc, producto_id asc;");
 								
-			int[] cantidad= new int[productos.size()];
 			
+			
+			//En caso de que encuentra algun pedido en la base de datos, lo muestra. En caso contrario no.
+			if(resultadoPedidosCompleto.next()==true) {
+				resultadoPedidosCompleto.beforeFirst();
+				int[] cantidad= new int[productos.size()];
+				int iterador=0;
+				while(resultadoPedidosCompleto.next()) {					
+					cantidad[iterador]=resultadoPedidosCompleto.getInt("cantidad");						
+					iterador++;
 
-		
-			int iterador=0;
-			while(resultadoPedidosCompleto.next()) {					
-				cantidad[iterador]=resultadoPedidosCompleto.getInt("cantidad");						
-				iterador++;
+					if(iterador==37) {
+						Restaurante restaurante=new Restaurante(resultadoPedidosCompleto.getString("cif"),
+								                          resultadoPedidosCompleto.getString("direccion"),
+								                          resultadoPedidosCompleto.getString("telefono"),
+								                          resultadoPedidosCompleto.getString("codigoRestaurante"));
+						Usuario usuario=new Usuario(resultadoPedidosCompleto.getString("usuario.nombre"),restaurante);
 
-				if(iterador==37) {
+						
+						Pedido pedido=new Pedido((short)resultadoPedidosCompleto.getInt("pedido.id"),
+														resultadoPedidosCompleto.getTimestamp("Fecha"),
+														productos,
+														cantidad,
+														usuario,
+														resultadoPedidosCompleto.getByte("facturado"));
+						
+						listModelObjeto.addElement(pedido);
 
-					Restaurante restaurante=new Restaurante(resultadoPedidosCompleto.getString("cif"),
-							                          resultadoPedidosCompleto.getString("restaurante.nombre"),
-							                          resultadoPedidosCompleto.getString("direccion"),
-							                          resultadoPedidosCompleto.getString("telefono"),
-							                          resultadoPedidosCompleto.getString("codigoRestaurante"));
-					Usuario usuario=new Usuario(resultadoPedidosCompleto.getString("usuario.nombre"),restaurante);
-
-					
-					Pedido pedido=new Pedido((short)resultadoPedidosCompleto.getInt("pedido.id"),
-													resultadoPedidosCompleto.getTimestamp("Fecha"),
-													productos,
-													cantidad,
-													usuario,
-													resultadoPedidosCompleto.getByte("facturado"));
-					
-					listModelObjeto.addElement(pedido);
-
-					iterador=0;
-					cantidad=new int[productos.size()];
-					btnGuardarPedidos.setEnabled(true);
-					btnGenerarFactura.setEnabled(true);
-					
+						iterador=0;
+						cantidad=new int[productos.size()];
+						btnGuardarPedidos.setEnabled(true);
+						btnGenerarFactura.setEnabled(true);
+						
+					}
+			
 				}
-		
-			}
-			smt.close();
+
 			stm.close();
 			}else {
 				listModelObjeto.addElement(null);
@@ -232,43 +262,30 @@ public class PanelAdministrador extends JPanel{
 	}
 		
 	private void guardaPedidosSeleccionadosEnArchivos() {
+		//Coge los indices de los elementos seleccionados del JList y los mete en un array
+		int[] indicesSeleccionados=JListDePedidos.getSelectedIndices();		
 		
-		
-		
-		//pasa los objetos seleccionados en un ArrayList
-		pasaObjetosSeleccionadosAUnArrayList(JListDePedidos);
-		
-		
-		///calcula la cantidad total del pedido seleccionado///
-			
+		///calcula la cantidad total del pedido seleccionado///			
 		int[]cantidadTotal=new int[productos.size()];
-		int suma=0;
 		
-		for(int i=0;i<listaObjetosSeleccionados.size();i++) {
-			for(int r=0;r<listaObjetosSeleccionados.get(i).getCantidad().length;r++) {						
-				cantidadTotal[r]+=listaObjetosSeleccionados.get(i).getCantidad()[r];				
+		for(int i=0;i<indicesSeleccionados.length;i++) {
+			for(int r=0;r<listModelObjeto.get(indicesSeleccionados[i]).getCantidad().length;r++) {						
+				cantidadTotal[r]+=listModelObjeto.get(indicesSeleccionados[i]).getCantidad()[r];				
 			}
 		}	
 		
-		///escribe la cantidad total en un archivo///
+		///escribe la cantidad total en un archivo y lo guarda en un archivo///
 		Pedido pedidoTotal=new Pedido(productos,cantidadTotal);
 		pedidoTotal.escribeArchivo();
 		
 		///escribe cada pedido seleccionado en un archivo
-		for(int i=0;i<listaObjetosSeleccionados.size();i++) {
-			listaObjetosSeleccionados.get(i).escribeArchivo();
+		for(int i=0;i<indicesSeleccionados.length;i++) {
+			listModelObjeto.get(indicesSeleccionados[i]).escribeArchivo();
 		}
 
 		
 	}
-	
-	private String convertirFecha(Timestamp r) {
-		LocalDateTime y=r.toLocalDateTime();
-		y.format(DateTimeFormatter.ofPattern("dd/MM/u-hh:mm"));
-		return y.format(DateTimeFormatter.ofPattern("dd/MM/u-hh:mm"))+"    ";
-		
-	}
-	
+
 	public void initComponents() {
 		
 		setForeground(Color.ORANGE);
@@ -318,10 +335,107 @@ public class PanelAdministrador extends JPanel{
 		etiquetaPedidoRealizado.setBounds(253, 471, 344, 29);
 		panelRecibirPedidos.add(etiquetaPedidoRealizado);
 		
-		JPanel panel_1 = new JPanel();
-		tabbedPane.addTab("New tab", null, panel_1, null);
+		JPanel panelAltaRestaurante = new JPanel();
+		
+		tabbedPane.addTab("Nuevo Restaurante", null, panelAltaRestaurante, null);
+		panelAltaRestaurante.setLayout(null);
+		
+		panelDatosRestaurante = new JPanel();
+		
+		panelDatosRestaurante.setBounds(22, 25, 465, 280);
+		panelAltaRestaurante.add(panelDatosRestaurante);
+		GridBagLayout gridBagLayout = new GridBagLayout();
+		gridBagLayout.columnWidths = new int[]{118, 0, 0};
+		gridBagLayout.rowHeights = new int[]{0, 0, 0, 0, 0, 0, 0};
+		gridBagLayout.columnWeights = new double[]{0.0, 1.0, Double.MIN_VALUE};
+		gridBagLayout.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
+		panelDatosRestaurante.setLayout(gridBagLayout);
+		
+		JLabel labelCodigoRestaurante = new JLabel("Codigo de Restaurante");
+		labelCodigoRestaurante.setFont(new Font("SansSerif", Font.PLAIN, 21));
+		GridBagConstraints gbc_labelCodigoRestaurante = new GridBagConstraints();
+		gbc_labelCodigoRestaurante.anchor = GridBagConstraints.EAST;
+		gbc_labelCodigoRestaurante.insets = new Insets(0, 0, 5, 5);
+		gbc_labelCodigoRestaurante.gridx = 0;
+		gbc_labelCodigoRestaurante.gridy = 0;
+		panelDatosRestaurante.add(labelCodigoRestaurante, gbc_labelCodigoRestaurante);
+		
+		campoCodigoRestaurante = new CampoTexto();
+		GridBagConstraints gbc_campoCodigoRestaurante = new GridBagConstraints();
+		gbc_campoCodigoRestaurante.insets = new Insets(0, 0, 5, 0);
+		gbc_campoCodigoRestaurante.fill = GridBagConstraints.HORIZONTAL;
+		gbc_campoCodigoRestaurante.gridx = 1;
+		gbc_campoCodigoRestaurante.gridy = 0;
+		panelDatosRestaurante.add(campoCodigoRestaurante, gbc_campoCodigoRestaurante);
+		campoCodigoRestaurante.setColumns(10);
+		
+		JLabel lblDireccion = new JLabel("Direccion");
+		lblDireccion.setFont(new Font("SansSerif", Font.PLAIN, 21));
+		GridBagConstraints gbc_lblDireccion = new GridBagConstraints();
+		gbc_lblDireccion.anchor = GridBagConstraints.EAST;
+		gbc_lblDireccion.insets = new Insets(0, 0, 5, 5);
+		gbc_lblDireccion.gridx = 0;
+		gbc_lblDireccion.gridy = 1;
+		panelDatosRestaurante.add(lblDireccion, gbc_lblDireccion);
+		
+		campoDireccion = new CampoTexto();
+		GridBagConstraints gbc_campoDireccion = new GridBagConstraints();
+		gbc_campoDireccion.insets = new Insets(0, 0, 5, 0);
+		gbc_campoDireccion.fill = GridBagConstraints.HORIZONTAL;
+		gbc_campoDireccion.gridx = 1;
+		gbc_campoDireccion.gridy = 1;
+		panelDatosRestaurante.add(campoDireccion, gbc_campoDireccion);
+		campoDireccion.setColumns(10);
+		
+		JLabel labelTelefono = new JLabel("Telefono");
+		labelTelefono.setFont(new Font("SansSerif", Font.PLAIN, 21));
+		GridBagConstraints gbc_labelTelefono = new GridBagConstraints();
+		gbc_labelTelefono.anchor = GridBagConstraints.EAST;
+		gbc_labelTelefono.insets = new Insets(0, 0, 5, 5);
+		gbc_labelTelefono.gridx = 0;
+		gbc_labelTelefono.gridy = 2;
+		panelDatosRestaurante.add(labelTelefono, gbc_labelTelefono);
+		
+		campoTelefono = new CampoTexto();
+		GridBagConstraints gbc_campoTelefono = new GridBagConstraints();
+		gbc_campoTelefono.insets = new Insets(0, 0, 5, 0);
+		gbc_campoTelefono.fill = GridBagConstraints.HORIZONTAL;
+		gbc_campoTelefono.gridx = 1;
+		gbc_campoTelefono.gridy = 2;
+		panelDatosRestaurante.add(campoTelefono, gbc_campoTelefono);
+		campoTelefono.setColumns(10);
+		
+		JLabel labelCif = new JLabel("CIF");
+		labelCif.setFont(new Font("SansSerif", Font.PLAIN, 21));
+		GridBagConstraints gbc_labelCif = new GridBagConstraints();
+		gbc_labelCif.anchor = GridBagConstraints.EAST;
+		gbc_labelCif.insets = new Insets(0, 0, 5, 5);
+		gbc_labelCif.gridx = 0;
+		gbc_labelCif.gridy = 3;
+		panelDatosRestaurante.add(labelCif, gbc_labelCif);
+		
+		campoCif = new CampoTexto();
+		campoCif.setText("");
+		GridBagConstraints gbc_campoCif = new GridBagConstraints();
+		gbc_campoCif.insets = new Insets(0, 0, 5, 0);
+		gbc_campoCif.fill = GridBagConstraints.HORIZONTAL;
+		gbc_campoCif.gridx = 1;
+		gbc_campoCif.gridy = 3;
+		panelDatosRestaurante.add(campoCif, gbc_campoCif);
+		campoCif.setColumns(10);
+		
+		botonAltaRestaurante = new JButton("Enviar datos");
+		
+		botonAltaRestaurante.setBounds(22, 423, 214, 33);
+		panelAltaRestaurante.add(botonAltaRestaurante);
+		
+		labelError = new JLabel("");
+		labelError.setForeground(Color.RED);
+		labelError.setHorizontalAlignment(SwingConstants.CENTER);
+		labelError.setFont(new Font("Tahoma", Font.PLAIN, 18));
+		labelError.setBounds(32, 353, 606, 57);
+		panelAltaRestaurante.add(labelError);
 		
 		
 	}
-	
 }

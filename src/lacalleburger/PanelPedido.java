@@ -7,22 +7,14 @@ import javax.swing.JScrollPane;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.border.EmptyBorder;
-
 import pedidos.Pedido;
-import restaurantes.Restaurante;
-import usuarios.Administrador;
 import usuarios.Usuario;
-
 import java.awt.Color;
 import java.awt.BorderLayout;
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.time.LocalDate;
 import java.awt.event.ActionEvent;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -31,6 +23,9 @@ import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.Insets;
 import javax.swing.SwingConstants;
+import java.awt.Component;
+import javax.swing.UIManager;
+
 
 public class PanelPedido extends JPanel{
 	private Usuario usuario;
@@ -108,12 +103,15 @@ public class PanelPedido extends JPanel{
 	 */
 	public void initComponents() {
 		setBackground(Color.BLACK);
-		this.setSize(980,700);
+		this.setSize(1010,700);
 		ventana.setSize(this.getSize());
 		setLayout(new BorderLayout(0, 0));
 		
-		JLabel titulo = new JLabel("Usuario: "+usuario.getUsuario()+" Restaurante: "+usuario.getRestaurante().getNombre());
-		titulo.setBackground(Color.BLACK);
+		JLabel titulo = new JLabel("Usuario: "+usuario.getUsuario()+"      Restaurante: "+usuario.getRestaurante().getCodigoRestaurante()+"     Fecha: "+LocalDate.now());
+		titulo.setAlignmentX(Component.CENTER_ALIGNMENT);
+		titulo.setMinimumSize(new Dimension(327, 21));
+		titulo.setBorder(BorderFactory.createMatteBorder(0, 0, 2, 0, Color.RED));
+		titulo.setBackground(Color.DARK_GRAY);
 		titulo.setForeground(new Color(248, 248, 255));
 		titulo.setHorizontalAlignment(SwingConstants.CENTER);
 		titulo.setFont(new Font("Dialog", Font.PLAIN, 25));
@@ -126,9 +124,9 @@ public class PanelPedido extends JPanel{
 		panel.setBackground(Color.BLACK);
 		scrollPane.setViewportView(panel);
 		GridBagLayout gbl_panel = new GridBagLayout();
-		gbl_panel.columnWidths = new int[] {391, 72, 391, 72};
+		gbl_panel.columnWidths = new int[] {391, 72, 41, 391, 72};
 		gbl_panel.rowHeights = new int[]{50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50};
-		gbl_panel.columnWeights = new double[]{0.0, 0.0, 0.0, 0.0};
+		gbl_panel.columnWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0};
 		gbl_panel.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 1.0};
 		panel.setLayout(gbl_panel);
 		
@@ -149,7 +147,7 @@ public class PanelPedido extends JPanel{
 		GridBagConstraints gbc_salsasTitulo = new GridBagConstraints();
 		gbc_salsasTitulo.fill = GridBagConstraints.VERTICAL;
 		gbc_salsasTitulo.insets = new Insets(0, 0, 5, 5);
-		gbc_salsasTitulo.gridx = 2;
+		gbc_salsasTitulo.gridx = 3;
 		gbc_salsasTitulo.gridy = 0;
 		panel.add(salsasTitulo, gbc_salsasTitulo);
 		
@@ -170,7 +168,7 @@ public class PanelPedido extends JPanel{
 		gbc_aguja_num.fill = GridBagConstraints.BOTH;
 		gbc_aguja_num.insets = new Insets(0, 0, 5, 5);
 		gbc_aguja_num.gridx = 1;
-		gbc_aguja_num.gridy = 1;
+		gbc_aguja_num.gridy = 1;		
 		panel.add(aguja_num, gbc_aguja_num);
 		
 		
@@ -180,7 +178,7 @@ public class PanelPedido extends JPanel{
 		GridBagConstraints gbc_salteado = new GridBagConstraints();
 		gbc_salteado.fill = GridBagConstraints.BOTH;
 		gbc_salteado.insets = new Insets(0, 0, 5, 5);
-		gbc_salteado.gridx = 2;
+		gbc_salteado.gridx = 3;
 		gbc_salteado.gridy = 1;
 		panel.add(salteado, gbc_salteado);
 		
@@ -190,7 +188,7 @@ public class PanelPedido extends JPanel{
 		GridBagConstraints gbc_salteado_num = new GridBagConstraints();
 		gbc_salteado_num.fill = GridBagConstraints.BOTH;
 		gbc_salteado_num.insets = new Insets(0, 0, 5, 0);
-		gbc_salteado_num.gridx = 3;
+		gbc_salteado_num.gridx = 4;
 		gbc_salteado_num.gridy = 1;
 		panel.add(salteado_num, gbc_salteado_num);
 		
@@ -220,7 +218,7 @@ public class PanelPedido extends JPanel{
 		GridBagConstraints gbc_ketchup = new GridBagConstraints();
 		gbc_ketchup.fill = GridBagConstraints.BOTH;
 		gbc_ketchup.insets = new Insets(0, 0, 5, 5);
-		gbc_ketchup.gridx = 2;
+		gbc_ketchup.gridx = 3;
 		gbc_ketchup.gridy = 2;
 		panel.add(ketchup, gbc_ketchup);
 		
@@ -230,7 +228,7 @@ public class PanelPedido extends JPanel{
 		GridBagConstraints gbc_ketchup_num = new GridBagConstraints();
 		gbc_ketchup_num.fill = GridBagConstraints.BOTH;
 		gbc_ketchup_num.insets = new Insets(0, 0, 5, 0);
-		gbc_ketchup_num.gridx = 3;
+		gbc_ketchup_num.gridx = 4;
 		gbc_ketchup_num.gridy = 2;
 		panel.add(ketchup_num, gbc_ketchup_num);
 		
@@ -260,7 +258,7 @@ public class PanelPedido extends JPanel{
 		GridBagConstraints gbc_lacalle = new GridBagConstraints();
 		gbc_lacalle.fill = GridBagConstraints.BOTH;
 		gbc_lacalle.insets = new Insets(0, 0, 5, 5);
-		gbc_lacalle.gridx = 2;
+		gbc_lacalle.gridx = 3;
 		gbc_lacalle.gridy = 3;
 		panel.add(lacalle, gbc_lacalle);
 		
@@ -270,7 +268,7 @@ public class PanelPedido extends JPanel{
 		GridBagConstraints gbc_lacalle_num = new GridBagConstraints();
 		gbc_lacalle_num.fill = GridBagConstraints.BOTH;
 		gbc_lacalle_num.insets = new Insets(0, 0, 5, 0);
-		gbc_lacalle_num.gridx = 3;
+		gbc_lacalle_num.gridx = 4;
 		gbc_lacalle_num.gridy = 3;
 		panel.add(lacalle_num, gbc_lacalle_num);
 		
@@ -300,7 +298,7 @@ public class PanelPedido extends JPanel{
 		GridBagConstraints gbc_chimichurri = new GridBagConstraints();
 		gbc_chimichurri.fill = GridBagConstraints.BOTH;
 		gbc_chimichurri.insets = new Insets(0, 0, 5, 5);
-		gbc_chimichurri.gridx = 2;
+		gbc_chimichurri.gridx = 3;
 		gbc_chimichurri.gridy = 4;
 		panel.add(chimichurri, gbc_chimichurri);
 		
@@ -310,7 +308,7 @@ public class PanelPedido extends JPanel{
 		GridBagConstraints gbc_chimichurri_num = new GridBagConstraints();
 		gbc_chimichurri_num.fill = GridBagConstraints.BOTH;
 		gbc_chimichurri_num.insets = new Insets(0, 0, 5, 0);
-		gbc_chimichurri_num.gridx = 3;
+		gbc_chimichurri_num.gridx = 4;
 		gbc_chimichurri_num.gridy = 4;
 		panel.add(chimichurri_num, gbc_chimichurri_num);
 		
@@ -340,7 +338,7 @@ public class PanelPedido extends JPanel{
 		GridBagConstraints gbc_trufa = new GridBagConstraints();
 		gbc_trufa.fill = GridBagConstraints.BOTH;
 		gbc_trufa.insets = new Insets(0, 0, 5, 5);
-		gbc_trufa.gridx = 2;
+		gbc_trufa.gridx = 3;
 		gbc_trufa.gridy = 5;
 		panel.add(trufa, gbc_trufa);
 		
@@ -350,7 +348,7 @@ public class PanelPedido extends JPanel{
 		GridBagConstraints gbc_trufa_num = new GridBagConstraints();
 		gbc_trufa_num.fill = GridBagConstraints.BOTH;
 		gbc_trufa_num.insets = new Insets(0, 0, 5, 0);
-		gbc_trufa_num.gridx = 3;
+		gbc_trufa_num.gridx = 4;
 		gbc_trufa_num.gridy = 5;
 		panel.add(trufa_num, gbc_trufa_num);
 		
@@ -380,7 +378,7 @@ public class PanelPedido extends JPanel{
 		GridBagConstraints gbc_sweetChili = new GridBagConstraints();
 		gbc_sweetChili.fill = GridBagConstraints.BOTH;
 		gbc_sweetChili.insets = new Insets(0, 0, 5, 5);
-		gbc_sweetChili.gridx = 2;
+		gbc_sweetChili.gridx = 3;
 		gbc_sweetChili.gridy = 6;
 		panel.add(sweetChili, gbc_sweetChili);
 		
@@ -390,7 +388,7 @@ public class PanelPedido extends JPanel{
 		GridBagConstraints gbc_sweetChili_num = new GridBagConstraints();
 		gbc_sweetChili_num.fill = GridBagConstraints.BOTH;
 		gbc_sweetChili_num.insets = new Insets(0, 0, 5, 0);
-		gbc_sweetChili_num.gridx = 3;
+		gbc_sweetChili_num.gridx = 4;
 		gbc_sweetChili_num.gridy = 6;
 		panel.add(sweetChili_num, gbc_sweetChili_num);
 		
@@ -420,7 +418,7 @@ public class PanelPedido extends JPanel{
 		GridBagConstraints gbc_vegana = new GridBagConstraints();
 		gbc_vegana.fill = GridBagConstraints.BOTH;
 		gbc_vegana.insets = new Insets(0, 0, 5, 5);
-		gbc_vegana.gridx = 2;
+		gbc_vegana.gridx = 3;
 		gbc_vegana.gridy = 7;
 		panel.add(vegana, gbc_vegana);
 		
@@ -430,7 +428,7 @@ public class PanelPedido extends JPanel{
 		GridBagConstraints gbc_vegana_num = new GridBagConstraints();
 		gbc_vegana_num.fill = GridBagConstraints.BOTH;
 		gbc_vegana_num.insets = new Insets(0, 0, 5, 0);
-		gbc_vegana_num.gridx = 3;
+		gbc_vegana_num.gridx = 4;
 		gbc_vegana_num.gridy = 7;
 		panel.add(vegana_num, gbc_vegana_num);
 		
@@ -450,7 +448,7 @@ public class PanelPedido extends JPanel{
 		GridBagConstraints gbc_bbq = new GridBagConstraints();
 		gbc_bbq.fill = GridBagConstraints.BOTH;
 		gbc_bbq.insets = new Insets(0, 0, 5, 5);
-		gbc_bbq.gridx = 2;
+		gbc_bbq.gridx = 3;
 		gbc_bbq.gridy = 8;
 		panel.add(bbq, gbc_bbq);
 		
@@ -460,7 +458,7 @@ public class PanelPedido extends JPanel{
 		GridBagConstraints gbc_bbq_num = new GridBagConstraints();
 		gbc_bbq_num.fill = GridBagConstraints.BOTH;
 		gbc_bbq_num.insets = new Insets(0, 0, 5, 0);
-		gbc_bbq_num.gridx = 3;
+		gbc_bbq_num.gridx = 4;
 		gbc_bbq_num.gridy = 8;
 		panel.add(bbq_num, gbc_bbq_num);
 		
@@ -490,7 +488,7 @@ public class PanelPedido extends JPanel{
 		GridBagConstraints gbc_toffee = new GridBagConstraints();
 		gbc_toffee.fill = GridBagConstraints.BOTH;
 		gbc_toffee.insets = new Insets(0, 0, 5, 5);
-		gbc_toffee.gridx = 2;
+		gbc_toffee.gridx = 3;
 		gbc_toffee.gridy = 9;
 		panel.add(toffee, gbc_toffee);
 		
@@ -500,7 +498,7 @@ public class PanelPedido extends JPanel{
 		GridBagConstraints gbc_toffee_num = new GridBagConstraints();
 		gbc_toffee_num.fill = GridBagConstraints.BOTH;
 		gbc_toffee_num.insets = new Insets(0, 0, 5, 0);
-		gbc_toffee_num.gridx = 3;
+		gbc_toffee_num.gridx = 4;
 		gbc_toffee_num.gridy = 9;
 		panel.add(toffee_num, gbc_toffee_num);
 		
@@ -530,7 +528,7 @@ public class PanelPedido extends JPanel{
 		GridBagConstraints gbc_callejera = new GridBagConstraints();
 		gbc_callejera.fill = GridBagConstraints.BOTH;
 		gbc_callejera.insets = new Insets(0, 0, 5, 5);
-		gbc_callejera.gridx = 2;
+		gbc_callejera.gridx = 3;
 		gbc_callejera.gridy = 10;
 		panel.add(callejera, gbc_callejera);
 		
@@ -540,7 +538,7 @@ public class PanelPedido extends JPanel{
 		GridBagConstraints gbc_callejera_num = new GridBagConstraints();
 		gbc_callejera_num.fill = GridBagConstraints.BOTH;
 		gbc_callejera_num.insets = new Insets(0, 0, 5, 0);
-		gbc_callejera_num.gridx = 3;
+		gbc_callejera_num.gridx = 4;
 		gbc_callejera_num.gridy = 10;
 		panel.add(callejera_num, gbc_callejera_num);
 		
@@ -570,7 +568,7 @@ public class PanelPedido extends JPanel{
 		GridBagConstraints gbc_cesar = new GridBagConstraints();
 		gbc_cesar.fill = GridBagConstraints.BOTH;
 		gbc_cesar.insets = new Insets(0, 0, 5, 5);
-		gbc_cesar.gridx = 2;
+		gbc_cesar.gridx = 3;
 		gbc_cesar.gridy = 11;
 		panel.add(cesar, gbc_cesar);
 		
@@ -580,7 +578,7 @@ public class PanelPedido extends JPanel{
 		GridBagConstraints gbc_cesar_num = new GridBagConstraints();
 		gbc_cesar_num.fill = GridBagConstraints.BOTH;
 		gbc_cesar_num.insets = new Insets(0, 0, 5, 0);
-		gbc_cesar_num.gridx = 3;
+		gbc_cesar_num.gridx = 4;
 		gbc_cesar_num.gridy = 11;
 		panel.add(cesar_num, gbc_cesar_num);
 		
@@ -610,7 +608,7 @@ public class PanelPedido extends JPanel{
 		GridBagConstraints gbc_salsaAlitas = new GridBagConstraints();
 		gbc_salsaAlitas.fill = GridBagConstraints.BOTH;
 		gbc_salsaAlitas.insets = new Insets(0, 0, 5, 5);
-		gbc_salsaAlitas.gridx = 2;
+		gbc_salsaAlitas.gridx = 3;
 		gbc_salsaAlitas.gridy = 12;
 		panel.add(salsaAlitas, gbc_salsaAlitas);
 		
@@ -620,7 +618,7 @@ public class PanelPedido extends JPanel{
 		GridBagConstraints gbc_salsaAlitas_num = new GridBagConstraints();
 		gbc_salsaAlitas_num.fill = GridBagConstraints.BOTH;
 		gbc_salsaAlitas_num.insets = new Insets(0, 0, 5, 0);
-		gbc_salsaAlitas_num.gridx = 3;
+		gbc_salsaAlitas_num.gridx = 4;
 		gbc_salsaAlitas_num.gridy = 12;
 		panel.add(salsaAlitas_num, gbc_salsaAlitas_num);
 		
@@ -650,7 +648,7 @@ public class PanelPedido extends JPanel{
 		GridBagConstraints gbc_ensCol = new GridBagConstraints();
 		gbc_ensCol.fill = GridBagConstraints.BOTH;
 		gbc_ensCol.insets = new Insets(0, 0, 5, 5);
-		gbc_ensCol.gridx = 2;
+		gbc_ensCol.gridx = 3;
 		gbc_ensCol.gridy = 13;
 		panel.add(ensCol, gbc_ensCol);
 		
@@ -660,7 +658,7 @@ public class PanelPedido extends JPanel{
 		GridBagConstraints gbc_ensCol_num = new GridBagConstraints();
 		gbc_ensCol_num.fill = GridBagConstraints.BOTH;
 		gbc_ensCol_num.insets = new Insets(0, 0, 5, 0);
-		gbc_ensCol_num.gridx = 3;
+		gbc_ensCol_num.gridx = 4;
 		gbc_ensCol_num.gridy = 13;
 		panel.add(ensCol_num, gbc_ensCol_num);
 		
@@ -690,7 +688,7 @@ public class PanelPedido extends JPanel{
 		GridBagConstraints gbc_bocadillosTitulo = new GridBagConstraints();
 		gbc_bocadillosTitulo.fill = GridBagConstraints.VERTICAL;
 		gbc_bocadillosTitulo.insets = new Insets(0, 0, 5, 5);
-		gbc_bocadillosTitulo.gridx = 2;
+		gbc_bocadillosTitulo.gridx = 3;
 		gbc_bocadillosTitulo.gridy = 14;
 		panel.add(bocadillosTitulo, gbc_bocadillosTitulo);
 		
@@ -720,7 +718,7 @@ public class PanelPedido extends JPanel{
 		GridBagConstraints gbc_pibil = new GridBagConstraints();
 		gbc_pibil.fill = GridBagConstraints.BOTH;
 		gbc_pibil.insets = new Insets(0, 0, 5, 5);
-		gbc_pibil.gridx = 2;
+		gbc_pibil.gridx = 3;
 		gbc_pibil.gridy = 15;
 		panel.add(pibil, gbc_pibil);
 		
@@ -730,7 +728,7 @@ public class PanelPedido extends JPanel{
 		GridBagConstraints gbc_pibil_num = new GridBagConstraints();
 		gbc_pibil_num.fill = GridBagConstraints.BOTH;
 		gbc_pibil_num.insets = new Insets(0, 0, 5, 0);
-		gbc_pibil_num.gridx = 3;
+		gbc_pibil_num.gridx = 4;
 		gbc_pibil_num.gridy = 15;
 		panel.add(pibil_num, gbc_pibil_num);
 		
@@ -760,7 +758,7 @@ public class PanelPedido extends JPanel{
 		GridBagConstraints gbc_entrecot = new GridBagConstraints();
 		gbc_entrecot.fill = GridBagConstraints.BOTH;
 		gbc_entrecot.insets = new Insets(0, 0, 5, 5);
-		gbc_entrecot.gridx = 2;
+		gbc_entrecot.gridx = 3;
 		gbc_entrecot.gridy = 16;
 		panel.add(entrecot, gbc_entrecot);
 		
@@ -770,7 +768,7 @@ public class PanelPedido extends JPanel{
 		GridBagConstraints gbc_entrecot_num = new GridBagConstraints();
 		gbc_entrecot_num.insets = new Insets(0, 0, 5, 0);
 		gbc_entrecot_num.fill = GridBagConstraints.BOTH;
-		gbc_entrecot_num.gridx = 3;
+		gbc_entrecot_num.gridx = 4;
 		gbc_entrecot_num.gridy = 16;
 		panel.add(entrecot_num, gbc_entrecot_num);
 		
@@ -801,7 +799,7 @@ public class PanelPedido extends JPanel{
 		GridBagConstraints gbc_salchichas = new GridBagConstraints();
 		gbc_salchichas.anchor = GridBagConstraints.WEST;
 		gbc_salchichas.insets = new Insets(0, 0, 5, 5);
-		gbc_salchichas.gridx = 2;
+		gbc_salchichas.gridx = 3;
 		gbc_salchichas.gridy = 17;
 		panel.add(salchichas, gbc_salchichas);
 		
@@ -811,7 +809,7 @@ public class PanelPedido extends JPanel{
 		GridBagConstraints gbc_salchichas_num = new GridBagConstraints();
 		gbc_salchichas_num.fill = GridBagConstraints.BOTH;
 		gbc_salchichas_num.insets = new Insets(0, 0, 5, 0);
-		gbc_salchichas_num.gridx = 3;
+		gbc_salchichas_num.gridx = 4;
 		gbc_salchichas_num.gridy = 17;
 		panel.add(salchichas_num, gbc_salchichas_num);
 		
@@ -840,7 +838,7 @@ public class PanelPedido extends JPanel{
 		lblPostres.setFont(new Font("Tahoma", Font.BOLD, 16));
 		GridBagConstraints gbc_lblPostres = new GridBagConstraints();
 		gbc_lblPostres.insets = new Insets(0, 0, 5, 5);
-		gbc_lblPostres.gridx = 2;
+		gbc_lblPostres.gridx = 3;
 		gbc_lblPostres.gridy = 18;
 		panel.add(lblPostres, gbc_lblPostres);
 		
@@ -850,7 +848,7 @@ public class PanelPedido extends JPanel{
 		GridBagConstraints gbc_oreo = new GridBagConstraints();
 		gbc_oreo.anchor = GridBagConstraints.WEST;
 		gbc_oreo.insets = new Insets(0, 0, 5, 5);
-		gbc_oreo.gridx = 2;
+		gbc_oreo.gridx = 3;
 		gbc_oreo.gridy = 19;
 		panel.add(oreo, gbc_oreo);
 		
@@ -860,7 +858,7 @@ public class PanelPedido extends JPanel{
 		GridBagConstraints gbc_oreo_num = new GridBagConstraints();
 		gbc_oreo_num.fill = GridBagConstraints.BOTH;
 		gbc_oreo_num.insets = new Insets(0, 0, 5, 0);
-		gbc_oreo_num.gridx = 3;
+		gbc_oreo_num.gridx = 4;
 		gbc_oreo_num.gridy = 19;
 		panel.add(oreo_num, gbc_oreo_num);
 		
@@ -873,7 +871,7 @@ public class PanelPedido extends JPanel{
 		GridBagConstraints gbc_tartaQueso = new GridBagConstraints();
 		gbc_tartaQueso.anchor = GridBagConstraints.WEST;
 		gbc_tartaQueso.insets = new Insets(0, 0, 5, 5);
-		gbc_tartaQueso.gridx = 2;
+		gbc_tartaQueso.gridx = 3;
 		gbc_tartaQueso.gridy = 20;
 		panel.add(tartaQueso, gbc_tartaQueso);
 		
@@ -883,7 +881,7 @@ public class PanelPedido extends JPanel{
 		GridBagConstraints gbc_tartaQueso_num = new GridBagConstraints();
 		gbc_tartaQueso_num.fill = GridBagConstraints.BOTH;
 		gbc_tartaQueso_num.insets = new Insets(0, 0, 5, 0);
-		gbc_tartaQueso_num.gridx = 3;
+		gbc_tartaQueso_num.gridx = 4;
 		gbc_tartaQueso_num.gridy = 20;
 		panel.add(tartaQueso_num, gbc_tartaQueso_num);
 		
@@ -893,7 +891,7 @@ public class PanelPedido extends JPanel{
 		GridBagConstraints gbc_sacher = new GridBagConstraints();
 		gbc_sacher.anchor = GridBagConstraints.WEST;
 		gbc_sacher.insets = new Insets(0, 0, 5, 5);
-		gbc_sacher.gridx = 2;
+		gbc_sacher.gridx = 3;
 		gbc_sacher.gridy = 21;
 		panel.add(sacher, gbc_sacher);
 		
@@ -903,7 +901,7 @@ public class PanelPedido extends JPanel{
 		GridBagConstraints gbc_sacher_num = new GridBagConstraints();
 		gbc_sacher_num.fill = GridBagConstraints.BOTH;
 		gbc_sacher_num.insets = new Insets(0, 0, 5, 0);
-		gbc_sacher_num.gridx = 3;
+		gbc_sacher_num.gridx = 4;
 		gbc_sacher_num.gridy = 21;
 		panel.add(sacher_num, gbc_sacher_num);
 		
@@ -912,8 +910,8 @@ public class PanelPedido extends JPanel{
 		zanahoria.setFont(new Font("Dialog", Font.BOLD, 16));
 		GridBagConstraints gbc_zanahoria = new GridBagConstraints();
 		gbc_zanahoria.anchor = GridBagConstraints.WEST;
-		gbc_zanahoria.insets = new Insets(0, 0, 0, 5);
-		gbc_zanahoria.gridx = 2;
+		gbc_zanahoria.insets = new Insets(0, 0, 5, 5);
+		gbc_zanahoria.gridx = 3;
 		gbc_zanahoria.gridy = 22;
 		panel.add(zanahoria, gbc_zanahoria);
 		
@@ -921,8 +919,9 @@ public class PanelPedido extends JPanel{
 		zanahoria_num.setFont(new Font("Tahoma", Font.PLAIN, 27));
 		zanahoria_num.setModel(new SpinnerNumberModel(new Integer(0), new Integer(0), null, new Integer(1)));
 		GridBagConstraints gbc_zanahoria_num = new GridBagConstraints();
+		gbc_zanahoria_num.insets = new Insets(0, 0, 5, 0);
 		gbc_zanahoria_num.fill = GridBagConstraints.BOTH;
-		gbc_zanahoria_num.gridx = 3;
+		gbc_zanahoria_num.gridx = 4;
 		gbc_zanahoria_num.gridy = 22;
 		panel.add(zanahoria_num, gbc_zanahoria_num);
 		
@@ -930,9 +929,8 @@ public class PanelPedido extends JPanel{
 		btnEnviar.setFont(new Font("SansSerif", Font.BOLD, 18));
 		GridBagConstraints gbc_btnEnviar = new GridBagConstraints();
 		gbc_btnEnviar.gridheight = 1;
-		gbc_btnEnviar.gridwidth = 4;
+		gbc_btnEnviar.gridwidth = 5;
 		gbc_btnEnviar.fill = GridBagConstraints.BOTH;
-		gbc_btnEnviar.insets = new Insets(0, 0, 5, 5);
 		gbc_btnEnviar.gridx = 0;
 		gbc_btnEnviar.gridy = 24;
 		panel.add(btnEnviar, gbc_btnEnviar);

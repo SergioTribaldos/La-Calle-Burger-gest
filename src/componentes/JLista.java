@@ -1,4 +1,4 @@
-package lacalleburger;
+package componentes;
 
 import java.awt.Color;
 import java.awt.Component;
@@ -13,7 +13,7 @@ import javax.swing.ListCellRenderer;
 
 import pedidos.Pedido;
 
-class JLista extends DefaultListCellRenderer {
+public class JLista extends DefaultListCellRenderer {
 	DefaultListModel<Pedido> listModelObjeto;
 	DateFormat dateFormat;
 
@@ -25,11 +25,13 @@ class JLista extends DefaultListCellRenderer {
 	@Override
 	  public Component getListCellRendererComponent(JList list, Object value,
 	        int index, boolean isSelected, boolean cellHasFocus) {
+		//Recupera la informacion de pedido si hay pedido ese dia, en caso contrario deshabilita la lista
 	     if (value != null) {
-	    	 
-	        value =dateFormat.format(listModelObjeto.get(index).getFechaPedido())+"               "+listModelObjeto.get(index).getUsuario().getRestaurante().getNombre() ;
+	    	list.setEnabled(true);
+	        value =dateFormat.format(listModelObjeto.get(index).getFechaPedido())+"               "+listModelObjeto.get(index).getUsuario().getRestaurante().getCodigoRestaurante() ;
 	     }else {
-	    	 value = "NO HAY PEDIDOS";
+	    	 value = "No hay pedidos";
+	    	 list.setEnabled(false);
 	     }
 	     return super.getListCellRendererComponent(list, value, index,
 	           isSelected, cellHasFocus);
