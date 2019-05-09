@@ -45,11 +45,6 @@ public class PanelPrincipal extends JPanel {
 			public void actionPerformed(ActionEvent e) {
 				
 				ventana.cambiaPanel(new PanelLoginAdministrador(ventana),PanelPrincipal.this);
-				/*
-				PanelLoginAdministrador panelLoginAdministrador=new PanelLoginAdministrador(ventana);
-				ventana.setContentPane(panelLoginAdministrador);
-				estePanel.setVisible(false);*/
-				
 			}
 		});
 		administrador.setBounds(178, 373, 349, 77);

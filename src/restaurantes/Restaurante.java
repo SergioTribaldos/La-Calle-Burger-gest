@@ -1,7 +1,10 @@
 package restaurantes;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -115,6 +118,33 @@ public class Restaurante {
 		}
 
 		this.codigoRestaurante = codigoRestaurante.toUpperCase();
+	}
+	
+	public static String[] consultaRestaurantesDisponibles(Connection conexion) {
+		String[]restaurantes;
+		try {
+			
+			Statement smt=conexion.createStatement();
+			ResultSet resultados=smt.executeQuery("select codigoRestaurante from restaurante;");
+			resultados.last();
+			restaurantes=new String[resultados.getRow()];
+			resultados.beforeFirst();
+			int iterador=0;
+			while(resultados.next()) {
+				restaurantes[iterador]=resultados.getString("codigoRestaurante");
+				iterador++;
+			}
+			return restaurantes;
+			
+			
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return null;
+		}
+		
+		
 	}
 	
 	public void insertarRestauranteEnBaseDeDatos(Ventana ventana) {

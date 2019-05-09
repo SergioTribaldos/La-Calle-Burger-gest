@@ -24,6 +24,8 @@ public class Ventana extends JFrame{
 	
 	
 	public Ventana() {
+		this.setTitle("La Calle Burger Gest");
+		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);		
 		
 		addWindowListener(new WindowAdapter() {
 			@Override
@@ -50,7 +52,7 @@ public class Ventana extends JFrame{
 
 	}
 	
-	public Ventana(PanelFactura2 panelFactura,Connection conexion) {		
+	public Ventana(PanelFactura panelFactura,Connection conexion) {		
 		this.conexion = conexion;
 		setContentPane(panelFactura);
 		this.setVisible(true);
@@ -88,16 +90,16 @@ public class Ventana extends JFrame{
 	public static Connection compruebaConexion(JFrame ventana){
         try {
         	
-            Connection conexion = DriverManager.getConnection("jdbc:mysql://85.214.120.213", "sergio", "sergio");
+            Connection conexion = DriverManager.getConnection("jdbc:mysql://85.214.120.213?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC", "sergio", "sergio");
             Statement smt=conexion.createStatement();
             smt.executeQuery("use lacalle;");
-            smt.executeQuery("SET time_zone = '+2:00';");
             smt.close();
             return conexion;
         } catch (SQLException ex) {          
         	JOptionPane.showMessageDialog(ventana, "Error en la base de datos");
+        	ex.printStackTrace();
         	System.exit(ABORT);
-            ex.printStackTrace();
+            
             
         return null;       
     }

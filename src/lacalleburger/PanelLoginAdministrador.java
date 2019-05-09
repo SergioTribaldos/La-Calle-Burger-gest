@@ -30,11 +30,15 @@ import java.awt.GridBagConstraints;
 import java.awt.Insets;
 import java.awt.Dimension;
 import javax.swing.SwingConstants;
+
+import componentes.CampoTexto;
+import panelAdministrador.PanelAdministrador;
+
 import javax.swing.JList;
 
 public class PanelLoginAdministrador extends JPanel {
 	JButton siguiente;
-	private JTextField usuarioEntradaTexto;
+	private CampoTexto usuarioEntradaTexto;
 	private JPasswordField contrasenaEntradaTexto;
 	private Ventana ventana;
 	
@@ -61,7 +65,8 @@ public class PanelLoginAdministrador extends JPanel {
 		add(usuario_label);
 		
 		
-		usuarioEntradaTexto = new JTextField("johan");
+		usuarioEntradaTexto = new CampoTexto();
+		usuarioEntradaTexto.setText("johan");
 		usuarioEntradaTexto.setBounds(277, 214, 242, 28);
 		add(usuarioEntradaTexto);
 		usuarioEntradaTexto.setColumns(10);

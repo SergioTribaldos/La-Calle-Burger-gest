@@ -19,6 +19,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
 import java.text.DateFormat;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -31,7 +32,6 @@ import java.util.stream.DoubleStream;
 import java.util.stream.IntStream;
 
 import producto.Producto;
-import restaurantes.Restaurante;
 import usuarios.Usuario;
 
 /**
@@ -60,7 +60,7 @@ public class Pedido {
 
     }
     
-    public Pedido(short id,Timestamp fechaPedido,ArrayList<Producto> listaProductos,int[] cantidad,Usuario usuario,byte facturado) {
+    public Pedido(short id,Timestamp fechaPedido,ArrayList<Producto> listaProductos,int[] cantidad,String[] lote,Usuario usuario,byte facturado) {
     	this.id = id;
     	this.fechaPedido = fechaPedido;
     	this.usuario = usuario;
@@ -68,15 +68,13 @@ public class Pedido {
     	this.cantidad = cantidad;
     	this.usuario = usuario;	
     	this.facturado = facturado;
+    	this.lote = lote;
     }
     
     public Pedido(ArrayList<Producto> listaProductos,int[] cantidad) {
 		this.listaProductos=listaProductos;
 		this.cantidad = cantidad;
 	}
-    
-    
-    
     
 
     public byte getFacturado() {
@@ -291,6 +289,7 @@ public class Pedido {
             
             
             
+            
             log.append("<!DOCTYPE html>\r\n" + 
             		"<html lang=\"en\" dir=\"ltr\">\r\n" + 
             		"  <head>\r\n" + 
@@ -338,7 +337,7 @@ public class Pedido {
             		"  </tr>\r\n" + 
             		"  <tr>\r\n" + 
             		"    <td class=\"tg-73a0\">ENTREGA:</td>\r\n" + 
-            		"    <td class=\"tg-0pky\">direccion</td>\r\n" + 
+            		"    <td class=\"tg-0pky\">"+this.getUsuario().getRestaurante().getDireccion()+"</td>\r\n" + 
             		"    <td class=\"tg-73a0\">ALBARAN:</td>\r\n" + 
             		"    <td class=\"tg-0pky\" colspan=\"2\"></td>\r\n" + 
             		"  </tr>\r\n" + 
@@ -355,6 +354,7 @@ public class Pedido {
             		"");
             
            double[]sumaCantidadYProducto=new double[listaProductos.size()];
+           int filasIntroducidas=0;
             for(int i=0;i<this.listaProductos.size();i++){
             	if(this.cantidad[i]!=0) {
             		sumaCantidadYProducto[i]=(this.listaProductos.get(i).getPrecio()*this.cantidad[i]);
@@ -364,9 +364,22 @@ public class Pedido {
                     log.append("<td class=\"celda\">"+this.cantidad[i]+"</td>");
                     log.append("<td class=\"celda\">"+this.listaProductos.get(i).getPrecio()+"</td>");
                     log.append("<td class=\"celda\">"+sumaCantidadYProducto[i]+"</td>");
+                    filasIntroducidas++;
             	}
+        	
         } 
+            //Genera tantos espacios vacios como filas no se han introducido, para que todos los albaranes tengan el mismo formato
+            for(int e=0;e<this.cantidad.length-filasIntroducidas;e++) {
+        		log.append("<tr>");
+        		log.append("<td class=\"celda\"></td>");
+                log.append("<td class=\"celda\"></td>");
+                log.append("<td class=\"celda\"></td>");
+                log.append("<td class=\"celda\"></td>");
+                log.append("<td class=\"celda\"></td>");
+        	}
             sumaTotalSinIva=DoubleStream.of(sumaCantidadYProducto).sum();
+            DecimalFormat sumaSinIva=new DecimalFormat("###.###");
+            
             
             log.append("  <tr>\r\n" + 
             		"    <td class=\"tg-0pky\" colspan=\"4\">EXTRAS/ABONOS/DESCUENTOS</td>\r\n" + 
@@ -382,13 +395,13 @@ public class Pedido {
             		"    <td class=\"tg-73oq\"></td>\r\n" + 
             		"    <td class=\"tg-hfk9\"></td>\r\n" + 
             		"    <td class=\"tg-0pky\" colspan=\"2\">IVA                                        10%</td>\r\n" + 
-            		"    <td class=\"tg-0pky\">"+((sumaTotalSinIva*1.10)-sumaTotalSinIva)+"</td>\r\n" + 
+            		"    <td class=\"tg-0pky\">"+sumaSinIva.format(((sumaTotalSinIva*1.10)-sumaTotalSinIva))+"</td>\r\n" + 
             		"  </tr>\r\n" + 
             		"  <tr>\r\n" + 
             		"    <td class=\"tg-73oq\"></td>\r\n" + 
             		"    <td class=\"tg-73oq\"></td>\r\n" + 
             		"    <td class=\"tg-0pky\" colspan=\"2\">TOTAL</td>\r\n" + 
-            		"    <td class=\"tg-0pky\">"+(sumaTotalSinIva*1.10)+"</td>\r\n" + 
+            		"    <td class=\"tg-0pky\">"+sumaSinIva.format((sumaTotalSinIva*1.10))+"</td>\r\n" + 
             		"  </tr>\r\n" + 
             		"</table>\r\n" + 
             		"\r\n" + 

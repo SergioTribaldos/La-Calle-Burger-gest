@@ -9,6 +9,11 @@ package usuarios;
 
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.sql.Statement;
+
+import excepciones.UsuarioException;
 import pedidos.Pedido;
 import restaurantes.Restaurante;
 
@@ -30,6 +35,13 @@ public class Usuario {
       
     }
     
+    public Usuario(String restaurante,String usuario,String contrasena,String contrasena2) throws UsuarioException {
+        setUsuario(usuario);
+        setContrasena(contrasena,contrasena2);
+        String restauranteString = restaurante;
+      
+    }
+    
     public Usuario(String usuario,Restaurante restaurante) {
     	this.usuario = usuario;
         this.restaurante = restaurante;
@@ -47,8 +59,50 @@ public class Usuario {
         return restaurante;
     }
     
-
     
+    
+
+    public void setUsuario(String usuario) throws UsuarioException {
+    	if(usuario.length()<5||usuario.length()>20) {
+			throw new UsuarioException("El nombre de usuario debe tener entre 5 y 10 caracteres");
+			
+		}
+    	this.usuario = usuario;
+	}
+
+	public void setContrasena(String contrasena,String contrasena2) throws UsuarioException {
+		if(!contrasena.equals(contrasena2)) {
+			
+			throw new UsuarioException("Las dos contraseñas no coinciden");
+			
+
+		}else if(contrasena.length()<5||contrasena.length()>20) {
+			throw new UsuarioException("La contraseña debe tener entre 5 y 10 caracteres");
+			
+		}
+		this.contrasena = contrasena;
+	}
+
+	public void setRestaurante(Restaurante restaurante) {
+		this.restaurante = restaurante;
+	}
+
+	public void insertarUsuarioEnBaseDeDatos(Connection conexion,String usuario,String contrasena,String codigoRestaurante) {
+    	
+    	try {
+			PreparedStatement smt=conexion.prepareStatement("insert into usuario(nombre,contraseña,Restaurante_codigoRestaurante) values(?,?,?)");
+			smt.setString(1,usuario);
+			smt.setString(2,contrasena );
+			smt.setString(3,codigoRestaurante );
+			smt.executeUpdate();
+			
+			smt.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    	
+    }
     
     
     
