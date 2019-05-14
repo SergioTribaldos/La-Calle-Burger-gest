@@ -5,6 +5,8 @@ import javax.swing.JLabel;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionAdapter;
 
 import componentes.CampoTexto;
 import excepciones.RestauranteException;
@@ -51,7 +53,8 @@ public class PanelAltaUsuario extends JPanel {
 										Usuario nuevo=new Usuario(String.valueOf(comboBox.getSelectedItem()),
 																	campoUsuario.getText(),
 																	pasaPasswordAString(campoContrasena),
-																	pasaPasswordAString(campoConfirmaContrasena));
+																	pasaPasswordAString(campoConfirmaContrasena),
+																	ventana.getConexion());
 										nuevo.insertarUsuarioEnBaseDeDatos(ventana.getConexion(), nuevo.getUsuario(), nuevo.getContrasena(), String.valueOf(comboBox.getSelectedItem()));
 										botonAltaUsuario.setText("El usuario ha sido dado de alta");
 										botonAltaUsuario.setEnabled(false);
@@ -62,19 +65,26 @@ public class PanelAltaUsuario extends JPanel {
 										pulsado[0]=false;
 										
 									}
-
-								
-
-								
-							
-																			
+																
 					}
 					}
 				});
 		
 		
 		
-		
+		this.addMouseMotionListener(new MouseMotionAdapter() {
+			@Override
+			public void mouseMoved(MouseEvent arg0) {
+				try {
+					Thread.sleep(800);
+					labelError.setText("");
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+			}
+		});
 		
 		
 		

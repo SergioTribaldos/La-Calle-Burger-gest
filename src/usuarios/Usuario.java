@@ -10,6 +10,7 @@ package usuarios;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
@@ -32,11 +33,12 @@ public class Usuario {
         this.usuario = usuario;
         this.contrasena = contrasena;
         this.restaurante = restaurante;
+        
       
     }
     
-    public Usuario(String restaurante,String usuario,String contrasena,String contrasena2) throws UsuarioException {
-        setUsuario(usuario);
+    public Usuario(String restaurante,String usuario,String contrasena,String contrasena2,Connection conexion) throws UsuarioException {
+        setUsuario(usuario,conexion);
         setContrasena(contrasena,contrasena2);
         String restauranteString = restaurante;
       
@@ -62,11 +64,28 @@ public class Usuario {
     
     
 
-    public void setUsuario(String usuario) throws UsuarioException {
+    public void setUsuario(String usuario,Connection conexion) throws UsuarioException {
     	if(usuario.length()<5||usuario.length()>20) {
 			throw new UsuarioException("El nombre de usuario debe tener entre 5 y 10 caracteres");
 			
 		}
+    	
+    	try {
+			Statement smt=conexion.createStatement();
+			smt.executeQuery("select nombre from usuario");
+			ResultSet resultado=smt.executeQuery("select nombre from usuario");
+			while(resultado.next()) {
+				if(usuario.equals(resultado.getString("nombre"))) {
+					throw new UsuarioException("El nombre de usuario ya existe");
+				}
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    	
+    	
+    	
     	this.usuario = usuario;
 	}
 
@@ -104,10 +123,9 @@ public class Usuario {
     	
     }
     
-    
-    
-    
-    
+   
     
 }
+
+
 

@@ -58,6 +58,8 @@ public class PanelAltaRestaurante extends JPanel{
 								botonAltaRestaurante.setText("Enviar datos");
 								pulsado[0]=false;
 								e.printStackTrace();
+								
+								
 							}													
 					}
 					}
@@ -71,7 +73,7 @@ public class PanelAltaRestaurante extends JPanel{
 			@Override
 			public void mouseMoved(MouseEvent arg0) {
 				try {
-					Thread.sleep(300);
+					Thread.sleep(800);
 					labelError.setText("");
 				} catch (InterruptedException e) {
 					// TODO Auto-generated catch block

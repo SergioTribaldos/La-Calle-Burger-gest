@@ -204,7 +204,7 @@ public class Pedido {
         try {
         	
            
-            File logFile=new File(nombreRestaurante+" "+fechaArchivo+".html");
+            File logFile=new File(".\\#PEDIDOS\\"+nombreRestaurante+" "+fechaArchivo+".html");
             log = new FileWriter(logFile.getAbsoluteFile(),false);
             
             DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
@@ -283,7 +283,7 @@ public class Pedido {
            	fechaArchivo = dateFormat.format(this.fechaPedido);
            	nombreRestaurante=this.getUsuario().getRestaurante().getCodigoRestaurante();
            
-            File logFile=new File("ALBARAN "+nombreRestaurante+" "+fechaArchivo+".html");
+            File logFile=new File(".\\#ALBARANES\\"+"ALBARAN "+nombreRestaurante+" "+fechaArchivo+".html");
             log = new FileWriter(logFile.getAbsoluteFile(),false);
             
             

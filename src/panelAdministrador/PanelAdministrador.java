@@ -60,6 +60,8 @@ import java.beans.PropertyChangeEvent;
 import java.beans.VetoableChangeListener;
 import javax.swing.SwingConstants;
 import java.awt.event.MouseMotionAdapter;
+import javax.swing.event.ChangeListener;
+import javax.swing.event.ChangeEvent;
 
 
 public class PanelAdministrador extends JPanel{
@@ -79,7 +81,14 @@ public class PanelAdministrador extends JPanel{
 		this.ventana = ventan;
 		
 		initComponents();
-
+		
+		tabbedPane.addChangeListener(new ChangeListener() {
+			public void stateChanged(ChangeEvent arg0) {
+				panelRecibirPedidos.revalidate();
+				panelRecibirPedidos.repaint();
+				
+			}
+		});
 
 		
 	}
@@ -99,6 +108,7 @@ public class PanelAdministrador extends JPanel{
 		
 		
 		tabbedPane = new JTabbedPane(JTabbedPane.TOP);
+		
 		tabbedPane.setBounds(0, 0, 672, 570);
 		add(tabbedPane);
 		ventana.setSize(tabbedPane.getSize());

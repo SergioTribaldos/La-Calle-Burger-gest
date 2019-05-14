@@ -20,10 +20,11 @@ import java.sql.Statement;
 
 public class Ventana extends JFrame{
 	JPanel panelActual;	
-	Connection conexion;
+	static Connection conexion;
 	
 	
 	public Ventana() {
+
 		this.setTitle("La Calle Burger Gest");
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);		
 		
