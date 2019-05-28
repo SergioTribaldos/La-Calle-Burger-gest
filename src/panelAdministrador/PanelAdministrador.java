@@ -63,66 +63,46 @@ import java.awt.event.MouseMotionAdapter;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.ChangeEvent;
 
+public class PanelAdministrador extends JPanel {
 
-public class PanelAdministrador extends JPanel{
-
-	
 	Ventana ventana;
 
 	private JTabbedPane tabbedPane;
-	
-	
+
 	private PanelAltaRestaurante panelAltaRestaurante;
 	private PanelRecibirPedidos panelRecibirPedidos;
 	private PanelAltaUsuario panelAltaUsuario;
-	
 
 	public PanelAdministrador(Ventana ventan) {
 		this.ventana = ventan;
-		
-		initComponents();
-		
-		tabbedPane.addChangeListener(new ChangeListener() {
-			public void stateChanged(ChangeEvent arg0) {
-				panelRecibirPedidos.revalidate();
-				panelRecibirPedidos.repaint();
-				
-			}
-		});
 
-		
+		// Este es un panel de tipo JTabbedPane que contiene 3 JPanel.
+
+		initComponents();
+
 	}
 
-	
-		
-	
-
-
-	
-	
 	public void initComponents() {
-		
+
 		setForeground(Color.ORANGE);
 		setLayout(null);
-		ventana.setSize(1200,800);
-		
-		
+		ventana.setSize(1200, 800);
+
 		tabbedPane = new JTabbedPane(JTabbedPane.TOP);
-		
+
 		tabbedPane.setBounds(0, 0, 672, 570);
 		add(tabbedPane);
 		ventana.setSize(tabbedPane.getSize());
-		
+
 		panelRecibirPedidos = new PanelRecibirPedidos(this.ventana);
 		tabbedPane.addTab("Recibir pedidos", null, panelRecibirPedidos, null);
 		tabbedPane.setEnabledAt(0, true);
 
-		panelAltaRestaurante = new PanelAltaRestaurante(this.ventana);	
+		panelAltaRestaurante = new PanelAltaRestaurante(this.ventana);
 		tabbedPane.addTab("Nuevo Restaurante", null, panelAltaRestaurante, null);
-		
+
 		panelAltaUsuario = new PanelAltaUsuario(this.ventana);
 		tabbedPane.addTab("Nuevo Usuario", null, panelAltaUsuario, null);
 
-		
 	}
 }

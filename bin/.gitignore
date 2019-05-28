@@ -1,11 +1,14 @@
 /jcalendar-1.4/
+/jcalendar-1.4.jar
+/mysql-connector-java-8.0.15.jar
+/UML.ucls
 /componentes/
 /descarga.png
 /excepciones/
-/jcalendar-1.4.jar
 /lacalleburger/
-/mysql-connector-java-8.0.15.jar
+/login/
 /panelAdministrador/
+/panelUsuario/
 /pedidos/
 /producto/
 /restaurantes/

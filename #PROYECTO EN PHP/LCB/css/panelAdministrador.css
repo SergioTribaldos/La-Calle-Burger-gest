@@ -1,0 +1,102 @@
+
+.row{
+margin-top: 20px;
+margin-bottom: 20px;
+
+}
+.alert {
+  width: 250px;
+  display: none;
+  font-size: 10px;
+}
+
+#selectable {
+  width: 100%;
+  border: none;
+  font-size: 15px;
+  font-family: 'Montserrat', sans-serif;
+  text-align: center;
+
+}
+#campoRestaurante{
+  margin-top: 20px;
+  height: 40px !important;
+}
+#formularioAlta{
+  font-family: 'Montserrat', sans-serif;
+}
+.campoIntroduce{
+  height: 60px !important;
+  width:300px !important;
+  margin-bottom: 20px !important;
+}
+
+#cabeceraLista{
+  text-align: center;
+}
+tbody{
+  min-height: 600px;
+  height: 600px;
+  width: 600px;
+}
+#tablaFacturas{
+  font-family: 'Montserrat', sans-serif;
+}
+
+#selectable .ui-selected {
+  background: #5ea4e0;
+  border: none;
+}
+
+#calendar{
+  display: flex;
+  justify-content: center;
+}
+
+th {
+  text-align: center !important;
+}
+
+
+#divTabla,
+#divCalendario {
+  display: block;
+  align-items: center;
+  justify-content: center;
+}
+#tablaFacturas tbody tr td:nth-child(3){
+  width: 70px;
+  text-align: center;
+}
+#tablaFacturas tbody tr td:nth-child(1){
+  width: 120px;
+  text-align:right;
+  padding-right:10px;
+}
+
+#cabeceraFacturas th{
+  padding-bottom: 10px;
+}
+
+#botonEnviarFactura{
+  display: block;
+  margin: auto;
+  margin-top: 20px;
+}
+.boton{
+  width: 100%;
+}
+
+.campoIntroduce{
+  width:200px;
+}
+
+input{
+  width: 120px;
+}
+ tr{
+  line-height:20px;
+}
+.ui-dialog-titlebar{
+  background: #5ea4e0;
+}

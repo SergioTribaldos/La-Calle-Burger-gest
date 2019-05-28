@@ -41,6 +41,7 @@ public class PanelAltaUsuario extends JPanel {
 		initComponents();
 		
 		boolean[] pulsado = {false};
+		//Boton de alta de usuario
 		botonAltaUsuario.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				

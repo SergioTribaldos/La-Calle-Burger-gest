@@ -1,12 +1,15 @@
-package lacalleburger;
+package panelUsuario;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.border.EmptyBorder;
+
+import lacalleburger.Ventana;
 import pedidos.Pedido;
 import usuarios.Usuario;
 import java.awt.Color;
@@ -81,17 +84,18 @@ public class PanelPedido extends JPanel{
 		
 		btnEnviar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				if(pulsado[0]==false) {
-					btnEnviar.setText("Pulsa de nuevo para enviar el pedido");
-					pulsado[0]=true;
-				}else {
+				
+		
+					if(JOptionPane.showConfirmDialog(ventana, "Desea realizar el pedido?","Atención",JOptionPane.YES_NO_OPTION)==JOptionPane.YES_OPTION) {
+						btnEnviar.setText("Tu pedido ha sido enviado!");
+						btnEnviar.setEnabled(false);
+						int []cantidad= {(Integer)aguja_num.getValue(),(Integer)angus_num.getValue(),(Integer)entrana_num.getValue(),(Integer)garbanzos_num.getValue(),(Integer)lentejas_num.getValue(),(Integer)vacio_num.getValue(),(Integer)doble_num.getValue(),(Integer)alitas_num.getValue(),(Integer)bacon_num.getValue(),(Integer)cebolla_num.getValue(),(Integer)portobello_num.getValue(),(Integer)costillas_num.getValue(),(Integer)brocheta_num.getValue(),(Integer)fingers_num.getValue(),(Integer)pimiento_num.getValue(),(Integer)pollo_num.getValue(),(Integer)calambrito_num.getValue(),(Integer)salteado_num.getValue(),(Integer)ketchup_num.getValue(),(Integer)lacalle_num.getValue(),(Integer)chimichurri_num.getValue(),(Integer)trufa_num.getValue(),(Integer)sweetChili_num.getValue(),(Integer)vegana_num.getValue(),(Integer)bbq_num.getValue(),(Integer)toffee_num.getValue(),(Integer)callejera_num.getValue(),(Integer)cesar_num.getValue(),(Integer)salsaAlitas_num.getValue(),(Integer)ensCol_num.getValue(),(Integer)pibil_num.getValue(),(Integer)entrecot_num.getValue(),(Integer)salchichas_num.getValue(),(Integer)oreo_num.getValue(),(Integer)tartaQueso_num.getValue(),(Integer)sacher_num.getValue(),(Integer)zanahoria_num.getValue()};
+						Pedido nuevo=new Pedido(usuario,ventana.getConexion(),cantidad);
+						nuevo.nuevoPedido();
+						
+					}
 					
-					int []cantidad= {(Integer)aguja_num.getValue(),(Integer)angus_num.getValue(),(Integer)entrana_num.getValue(),(Integer)garbanzos_num.getValue(),(Integer)lentejas_num.getValue(),(Integer)vacio_num.getValue(),(Integer)doble_num.getValue(),(Integer)alitas_num.getValue(),(Integer)bacon_num.getValue(),(Integer)cebolla_num.getValue(),(Integer)portobello_num.getValue(),(Integer)costillas_num.getValue(),(Integer)brocheta_num.getValue(),(Integer)fingers_num.getValue(),(Integer)pimiento_num.getValue(),(Integer)pollo_num.getValue(),(Integer)calambrito_num.getValue(),(Integer)salteado_num.getValue(),(Integer)ketchup_num.getValue(),(Integer)lacalle_num.getValue(),(Integer)chimichurri_num.getValue(),(Integer)trufa_num.getValue(),(Integer)sweetChili_num.getValue(),(Integer)vegana_num.getValue(),(Integer)bbq_num.getValue(),(Integer)toffee_num.getValue(),(Integer)callejera_num.getValue(),(Integer)cesar_num.getValue(),(Integer)salsaAlitas_num.getValue(),(Integer)ensCol_num.getValue(),(Integer)pibil_num.getValue(),(Integer)entrecot_num.getValue(),(Integer)salchichas_num.getValue(),(Integer)oreo_num.getValue(),(Integer)tartaQueso_num.getValue(),(Integer)sacher_num.getValue(),(Integer)zanahoria_num.getValue()};
-					Pedido nuevo=new Pedido(usuario,ventana.getConexion(),cantidad);
-					nuevo.nuevoPedido();
-					btnEnviar.setText("Tu pedido ha sido enviado!");
-					btnEnviar.setEnabled(false);
-				}
+				
 	
 			}
 		});

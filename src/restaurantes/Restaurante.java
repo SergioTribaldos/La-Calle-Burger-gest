@@ -14,6 +14,7 @@ import java.sql.Statement;
 
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import excepciones.RestauranteException;
 import lacalleburger.Ventana;
@@ -29,14 +30,25 @@ public class Restaurante {
     private String direccion;
     private String telefono;
     private String codigoRestaurante;
-
     
-
-    public Restaurante(String cif, String direccion, String telefono,String codigo) throws RestauranteException {
+    
+    
+public Restaurante(String cif, String direccion, String telefono,String codigo) throws RestauranteException {
+    	
         setCif(cif);
         setDireccion(direccion);
         setTelefono(telefono);
-        setCodigoRestaurante(codigo);
+        this.codigoRestaurante = codigo;
+
+    }
+    
+
+    public Restaurante(String cif, String direccion, String telefono,String codigo,Connection conexion) throws RestauranteException {
+    	
+        setCif(cif);
+        setDireccion(direccion);
+        setTelefono(telefono);
+        setCodigoRestaurante(codigo,conexion);
 
     }
 
@@ -106,7 +118,8 @@ public class Restaurante {
 
 
 
-	public void setCodigoRestaurante(String codigoRestaurante) throws RestauranteException {
+	public void setCodigoRestaurante(String codigoRestaurante,Connection conexion) throws RestauranteException {
+		codigoRestaurante=codigoRestaurante.toUpperCase();
 		if(codigoRestaurante.length()==0) {
 			throw new RestauranteException("El campo Código de restaurante no puede estar vacio");
 		}
@@ -116,10 +129,24 @@ public class Restaurante {
 				throw new RestauranteException("El campo Código de restaurante no puede contener numeros");
 			}
 		}
+		
+		String []restaurantes=consultaRestaurantesDisponibles(conexion);
+		boolean hayUnRestauranteConEsteNombre = Arrays.stream(restaurantes).anyMatch(codigoRestaurante::equals);
+		if(hayUnRestauranteConEsteNombre) {
+			throw new RestauranteException("El codigo de restaurante ya existe");
+		}else {
+			this.codigoRestaurante = codigoRestaurante;
+		}
+			
 
-		this.codigoRestaurante = codigoRestaurante.toUpperCase();
+		
 	}
 	
+	/**
+	 * Consulta la tabla "restaurante" de la base de datos y devuelve un array de String con los codigos de restaurante.
+	 * @param conexion La conexion que estamos utilizando
+	 * @return un array de String con los codigos de restaurante.
+	 */
 	public static String[] consultaRestaurantesDisponibles(Connection conexion) {
 		String[]restaurantes;
 		try {

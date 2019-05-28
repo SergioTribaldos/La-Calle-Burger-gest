@@ -11,10 +11,10 @@ package usuarios;
  *
  * @author Sergio
  */
-public class Administrador {
+public abstract class Administrador {
     private final String nombre;
     private final String contrasena;
-
+GF
     public Administrador(String nombre, String contrasena) {
         this.nombre = nombre;
         this.contrasena = contrasena;

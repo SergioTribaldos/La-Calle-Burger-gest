@@ -1,0 +1,21 @@
+
+  .input-group{
+    margin-bottom: 10px;
+  }
+  #todoFormulario{
+    margin-top: 5%;
+  }
+  .boton{
+    margin-top: 20px;
+    width: 300px;
+  }
+  #entraNumero{
+    width: 60px;
+    font-size: 30px;
+  }
+
+  #titulos{
+    text-align: center;
+    font-size: 30px;
+    font-weight: bold;
+  }

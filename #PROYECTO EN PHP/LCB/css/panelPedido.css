@@ -1,0 +1,46 @@
+#contenedorTablas{
+  display: flex;
+  margin:0 auto;
+  justify-content: center;
+
+}
+.tablaPedidos{
+  margin:50px;
+
+}
+.boton{
+  width: 70%;
+  margin: auto;
+  display: block;
+}
+h1{
+  text-align: center;
+}
+
+.tablaPedidos{
+  background-color: rgba(227,229,232,1);
+  z-index: 100;
+  padding: 35px;
+  margin: 0 0 20px 0px;
+  -webkit-box-shadow: 14px 17px 12px 1px rgba(199,199,199,1);
+  -moz-box-shadow: 14px 17px 12px 1px rgba(199,199,199,1);
+  box-shadow: 14px 17px 12px 1px rgba(199,199,199,1);
+
+}
+.tablaPedidos:nth-child(1){
+  border-style: solid;
+  border-width: 1px 0px 1px 1px;
+}
+.tablaPedidos:nth-child(2){
+  border-style: solid;
+  border-width: 1px 1px 1px 0px;
+}
+input{
+  text-align: center;
+}
+h1{
+  margin-bottom: 30px;
+}
+ui-dialog ui-corner-all ui-widget ui-widget-content ui-front ui-draggable ui-resizable{
+  background-color: red !important;
+}

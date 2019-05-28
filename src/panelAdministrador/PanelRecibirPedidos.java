@@ -18,9 +18,9 @@ import com.toedter.calendar.JCalendar;
 
 import componentes.JLista;
 import excepciones.RestauranteException;
-import lacalleburger.PanelFactura;
 import lacalleburger.Ventana;
 import pedidos.Pedido;
+import javax.swing.SwingConstants;
 
 public class PanelRecibirPedidos extends JPanel{
 	private JLista JListDePedidos;
@@ -162,6 +162,8 @@ public class PanelRecibirPedidos extends JPanel{
 		this.add(calendario);
 		
 		etiquetaPedidoRealizado = new JLabel();
+		etiquetaPedidoRealizado.setHorizontalAlignment(SwingConstants.CENTER);
+		etiquetaPedidoRealizado.setFont(new Font("SansSerif", Font.PLAIN, 18));
 		etiquetaPedidoRealizado.setBounds(253, 471, 344, 29);
 		this.add(etiquetaPedidoRealizado);
 		

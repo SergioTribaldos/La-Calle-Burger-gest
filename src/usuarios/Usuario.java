@@ -105,7 +105,13 @@ public class Usuario {
 	public void setRestaurante(Restaurante restaurante) {
 		this.restaurante = restaurante;
 	}
-
+	/**
+	 * Inserta un usuario en la base de datos
+	 * @param conexion La conexion.
+	 * @param usuario El nombre de usuario
+	 * @param contrasena La contraseña.
+	 * @param codigoRestaurante El codigo de restaurante del restaurante al que pertenece.
+	 */
 	public void insertarUsuarioEnBaseDeDatos(Connection conexion,String usuario,String contrasena,String codigoRestaurante) {
     	
     	try {
